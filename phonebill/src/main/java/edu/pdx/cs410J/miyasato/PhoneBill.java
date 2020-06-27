@@ -16,7 +16,10 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall>{
     }
 
     public void addPhoneCall(PhoneCall var1) {
-        pPhoneCalls.add(var1);
+        System.err.println(var1);
+        if (var1 != null) {
+            pPhoneCalls.add(var1);
+        }
     }
 
     public Collection<PhoneCall> getPhoneCalls() {

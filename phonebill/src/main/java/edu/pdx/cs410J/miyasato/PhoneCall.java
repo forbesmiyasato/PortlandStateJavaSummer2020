@@ -3,23 +3,29 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 public class PhoneCall extends AbstractPhoneCall {
+
+  private String caller;
+  private String callee;
+  private String startTime;
+  private String endTime;
+
   @Override
   public String getCaller() {
-    throw new UnsupportedOperationException("This method is not implemented yet");
+    return caller;
   }
 
   @Override
   public String getCallee() {
-    return "This method is not implemented yet";
+    return callee;
   }
 
   @Override
   public String getStartTimeString() {
-    throw new UnsupportedOperationException("This method is not implemented yet");
+    return startTime;
   }
 
   @Override
   public String getEndTimeString() {
-    throw new UnsupportedOperationException("This method is not implemented yet");
+    return endTime;
   }
 }
