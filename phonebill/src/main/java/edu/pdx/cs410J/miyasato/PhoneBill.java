@@ -9,14 +9,21 @@ import java.util.Collection;
 public class PhoneBill extends AbstractPhoneBill<PhoneCall>{
 
     private ArrayList<PhoneCall> pPhoneCalls;
-    private String customerName;
+    private String pCustomerName;
 
+    public PhoneBill () {
+        pPhoneCalls = new ArrayList<PhoneCall>();
+    }
+
+    public PhoneBill (String customerName) {
+        pCustomerName = customerName;
+        pPhoneCalls = new ArrayList<PhoneCall>();
+    }
     public String getCustomer() {
-        return customerName;
+        return pCustomerName;
     }
 
     public void addPhoneCall(PhoneCall var1) {
-        System.err.println(var1);
         if (var1 != null) {
             pPhoneCalls.add(var1);
         }

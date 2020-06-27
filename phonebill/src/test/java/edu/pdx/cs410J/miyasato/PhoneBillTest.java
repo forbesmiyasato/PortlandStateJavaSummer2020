@@ -9,7 +9,7 @@ public class PhoneBillTest {
     @Test
     public void addPhoneCallAddsPhoneCallToPhoneBill () {
         PhoneBill cPB = new PhoneBill();
-        PhoneCall cPC = new PhoneCall();
+        PhoneCall cPC = new PhoneCall("test", "test", "test", "test");
 
         cPB.addPhoneCall(cPC);
 
