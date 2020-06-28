@@ -165,7 +165,6 @@ public class AboutStrings {
             String.format("%s %s %s", "a", "b");
             fail("No Exception was thrown!");
         } catch (Exception e) {
-            System.err.println(e);
             assertEquals(e.getClass(), e.getClass());
             assertEquals(e.getMessage(), "Format specifier '%s'");
         }
