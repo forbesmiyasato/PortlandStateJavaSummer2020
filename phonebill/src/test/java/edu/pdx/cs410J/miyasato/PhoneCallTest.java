@@ -17,6 +17,7 @@ public class PhoneCallTest {
   public final String testCallee = "808-200-6188";
   public final String testStartTime = "1/15/2020 19:39";
   public final String testEndTime = "01/2/2020 1:03";
+
   @Test
   public void getStartTimeStringNeedsToBeImplemented() {
     PhoneCall call = new PhoneCall("test", "test", "test", "test");
@@ -36,37 +37,59 @@ public class PhoneCallTest {
   }
 
   @Test
-  public void checkIfGetCalleeGetsCorrectCallee () {
+  public void checkIfGetCalleeGetsCorrectCallee() {
     PhoneCall pc = createPhoneCall();
 
     assertEquals(pc.getCallee(), testCallee);
   }
 
   @Test
-  public void checkIfGetCallerGetsCorrectCaller () {
+  public void checkIfGetCallerGetsCorrectCaller() {
     PhoneCall pc = createPhoneCall();
 
     assertEquals(pc.getCaller(), testCaller);
   }
 
   @Test
-  public void checkIfGetStartTimeStringGetsCorrectStartTime () {
+  public void checkIfGetStartTimeStringGetsCorrectStartTime() {
     PhoneCall pc = createPhoneCall();
 
     assertEquals(pc.getStartTimeString(), testStartTime);
   }
 
   @Test
-  public void checkIfGetEndTimeStringGetsCorrectEndTime () {
+  public void checkIfGetEndTimeStringGetsCorrectEndTime() {
     PhoneCall pc = createPhoneCall();
 
     assertEquals(pc.getEndTimeString(), testEndTime);
   }
 
-  @Test public void phoneCallToStringHasTheCorrectCaller () {
+  @Test
+  public void phoneCallToStringHasTheCorrectCaller() {
     PhoneCall pc = createPhoneCall();
 
     assertThat(pc.toString(), containsString(testCaller));
+  }
+
+  @Test
+  public void phoneCallToStringHasTheCorrectCallee() {
+    PhoneCall pc = createPhoneCall();
+
+    assertThat(pc.toString(), containsString(testCallee));
+  }
+
+  @Test
+  public void phoneCallToStringHasCorrectStartTime() {
+    PhoneCall pc = createPhoneCall();
+
+    assertThat(pc.toString(), containsString(testStartTime));
+  }
+
+  @Test
+  public void phoneCallToStringHasCorrectEndTime() {
+    PhoneCall pc = createPhoneCall();
+
+    assertThat(pc.toString(), containsString(testEndTime));
   }
 
   public PhoneCall createPhoneCall() {
