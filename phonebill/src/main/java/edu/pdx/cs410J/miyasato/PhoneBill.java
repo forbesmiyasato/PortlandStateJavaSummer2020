@@ -12,13 +12,16 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall>{
     private String pCustomerName;
 
     public PhoneBill () {
+        super();
         pPhoneCalls = new ArrayList<PhoneCall>();
     }
 
     public PhoneBill (String customerName) {
+        super();
         pCustomerName = customerName;
         pPhoneCalls = new ArrayList<PhoneCall>();
     }
+
     public String getCustomer() {
         return pCustomerName;
     }

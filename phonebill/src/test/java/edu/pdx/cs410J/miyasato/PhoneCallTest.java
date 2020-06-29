@@ -13,6 +13,10 @@ import static org.junit.Assert.assertEquals;
  */
 public class PhoneCallTest {
 
+  public final String testCaller = "808-200-6188";
+  public final String testCallee = "808-200-6188";
+  public final String testStartTime = "1/15/2020 19:39";
+  public final String testEndTime = "01/2/2020 1:03";
   @Test
   public void getStartTimeStringNeedsToBeImplemented() {
     PhoneCall call = new PhoneCall("test", "test", "test", "test");
@@ -35,33 +39,39 @@ public class PhoneCallTest {
   public void checkIfGetCalleeGetsCorrectCallee () {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getCallee(), "808-200-2000");
+    assertEquals(pc.getCallee(), testCallee);
   }
 
   @Test
   public void checkIfGetCallerGetsCorrectCaller () {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getCaller(), "808-200-6188");
+    assertEquals(pc.getCaller(), testCaller);
   }
 
   @Test
   public void checkIfGetStartTimeStringGetsCorrectStartTime () {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getStartTimeString(), "1/15/2020 19:39");
+    assertEquals(pc.getStartTimeString(), testStartTime);
   }
 
   @Test
   public void checkIfGetEndTimeStringGetsCorrectEndTime () {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getEndTimeString(), "01/2/2020 1:03");
+    assertEquals(pc.getEndTimeString(), testEndTime);
+  }
+
+  @Test public void phoneCallToStringHasTheCorrectCaller () {
+    PhoneCall pc = createPhoneCall();
+
+    assertThat(pc.toString(), containsString(testCaller));
   }
 
   public PhoneCall createPhoneCall() {
-    PhoneCall pc = new PhoneCall("808-200-6188", "808-200-2000", "1/15/2020 19:39",
-            "01/2/2020 1:03");
+    PhoneCall pc = new PhoneCall(testCaller, testCallee, testStartTime,
+            testEndTime);
 
     return pc;
   }
