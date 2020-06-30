@@ -35,4 +35,11 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall>{
     public Collection<PhoneCall> getPhoneCalls() {
         return pPhoneCalls;
     }
+
+    public void printPhoneCalls() {
+        for (PhoneCall phoneCall : pPhoneCalls)
+        {
+            System.out.println(phoneCall.toString());
+        }
+    }
 }
