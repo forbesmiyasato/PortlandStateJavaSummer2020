@@ -9,6 +9,9 @@ public class PhoneCall extends AbstractPhoneCall {
   private String pStartTime;
   private String pEndTime;
 
+  /**
+   *
+   */
   public PhoneCall () {
     pCallee = "not implemented";
     pCaller = null;
@@ -16,6 +19,12 @@ public class PhoneCall extends AbstractPhoneCall {
     pEndTime = null;
   }
 
+  /**
+   * @param caller
+   * @param callee
+   * @param startTime
+   * @param endTime
+   */
   public PhoneCall (String caller, String callee, String startTime, String endTime) {
     pCaller = caller;
     pCallee = callee;
