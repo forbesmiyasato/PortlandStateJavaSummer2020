@@ -113,6 +113,9 @@ public class AboutInheritance {
         // Why does this work?
         // Change ChildTwo's doStuff return type to List
         List<?> list = new ChildTwo().doStuff();
+        Collection list2 = list;
+        //base class doesn't need ca sting when set to subclass?
+        //Only need subclassing when setting subclass to base class?
         assertEquals(list instanceof List, true);
     }
 }
