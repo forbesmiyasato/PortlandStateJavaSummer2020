@@ -1,7 +1,6 @@
 package edu.pdx.cs410J.miyasato;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -9,25 +8,17 @@ import java.util.Scanner;
  */
 public class Project1 {
 
-  public static void printReadMe() {
-    File readMe;
-    final String readMePath = "src/main/resources/edu/pdx/cs410J/miyasato/README.txt";
-    Scanner scanner;
+  public static void printReadMe() throws IOException {
+      InputStream readme = Project1.class.getResourceAsStream("README.txt");
+      BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
+      String line;
 
-    try {
-      readMe = new File(readMePath);
-      scanner = new Scanner(readMe);
-    } catch (FileNotFoundException e) {
-      System.err.println(e.getMessage());
-      return;
-    }
-
-    while(scanner.hasNextLine()) {
-      System.out.println(scanner.nextLine());
-    }
+      while((line = reader.readLine()) != null) {
+        System.out.println(line);
+      }
   }
 
-  private static void errorHandle(String errorMessage) {
+  private static void printErrorMessageAndExit(String errorMessage) {
     System.err.println(errorMessage);
     System.exit(1);
   }
@@ -47,20 +38,24 @@ public class Project1 {
     int expectedArgumentLength = 8;
 
     if (argumentLength == 0) {
-      errorHandle("Missing command line arguments");
+      printErrorMessageAndExit("Missing command line arguments");
     }
 
     options = args[0];
 
     if (options.equals("-README")) {
-      printReadMe();
+      try {
+        printReadMe();
+      } catch (IOException e) {
+        printErrorMessageAndExit(e.getMessage());
+      }
     }
     else if (options.equals("-print")) {
       if (argumentLength > expectedArgumentLength) {
-        errorHandle("Extraneous command line arguments");
+        printErrorMessageAndExit("Extraneous command line arguments");
       }
       else if (argumentLength < expectedArgumentLength) {
-        errorHandle("Not enough command line arguments to print");
+        printErrorMessageAndExit("Not enough command line arguments to print");
       }
 
       customerName = args[1];
@@ -81,7 +76,7 @@ public class Project1 {
       phoneBill.printPhoneCalls();
     }
     else {
-      errorHandle("INVALID OPTION!");
+      printErrorMessageAndExit("INVALID OPTION!");
     }
 
     System.exit(0);
