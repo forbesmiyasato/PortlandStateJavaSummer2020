@@ -51,4 +51,15 @@ public class PhoneBillTest {
 
         assertThat(cPB.toString(), containsString("2"));
     }
+
+//    @Test
+//    public void printPhoneCallsPrintsCorrectPhoneCalls() {
+//        PhoneCall cPC = new PhoneCall("test", "test", "test", "test");
+//        PhoneBill cPB = new PhoneBill("John");
+//
+//        cPB.addPhoneCall(cPC);
+//
+//        assertThat(cPB.printPhoneCalls(), containsString("1"));
+//    }
+
 }

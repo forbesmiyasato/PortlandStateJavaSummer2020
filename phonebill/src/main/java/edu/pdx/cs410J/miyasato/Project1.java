@@ -57,7 +57,7 @@ public class Project1 {
         System.exit(1);
       }
       else if (argumentLength < expectedArgumentLength) {
-        System.err.println("Missing command line arguments");
+        System.err.println("Not enough command line arguments to print");
         System.exit(1);
       }
 
@@ -80,7 +80,9 @@ public class Project1 {
     }
     else {
       System.err.println("INVALID OPTION!");
+      System.exit(1);
     }
-    System.exit(1);
+
+    System.exit(0);
   }
 }
