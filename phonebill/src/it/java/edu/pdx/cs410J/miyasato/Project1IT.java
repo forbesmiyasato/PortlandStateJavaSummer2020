@@ -82,4 +82,13 @@ public class Project1IT extends InvokeMainTestCase {
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString("INVALID OPTION!"));
         assertThat(result.getExitCode(), equalTo(1));
     }
+
+    @Test
+    public void invokingMainWithSevenOptionsPrintsCorrectOutputToStandardOutput() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
+                "1/15/2020", "19:39", "01/2/2020", "1:03");
+
+        assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
+                "Phone call from 808 to 200 from 1/15/2020 19:39 to 01/2/2020 1:03"));
+    }
 }

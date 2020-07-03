@@ -27,6 +27,11 @@ public class Project1 {
     }
   }
 
+  private static void errorHandle(String errorMessage) {
+    System.err.println(errorMessage);
+    System.exit(1);
+  }
+
   public static void main(String[] args) {
     String customerName;
     String callerNumber;
@@ -42,8 +47,7 @@ public class Project1 {
     int expectedArgumentLength = 8;
 
     if (argumentLength == 0) {
-      System.err.println("Missing command line arguments");
-      System.exit(1);
+      errorHandle("Missing command line arguments");
     }
 
     options = args[0];
@@ -53,12 +57,10 @@ public class Project1 {
     }
     else if (options.equals("-print")) {
       if (argumentLength > expectedArgumentLength) {
-        System.err.println("Extraneous command line arguments");
-        System.exit(1);
+        errorHandle("Extraneous command line arguments");
       }
       else if (argumentLength < expectedArgumentLength) {
-        System.err.println("Not enough command line arguments to print");
-        System.exit(1);
+        errorHandle("Not enough command line arguments to print");
       }
 
       customerName = args[1];
@@ -79,8 +81,7 @@ public class Project1 {
       phoneBill.printPhoneCalls();
     }
     else {
-      System.err.println("INVALID OPTION!");
-      System.exit(1);
+      errorHandle("INVALID OPTION!");
     }
 
     System.exit(0);
