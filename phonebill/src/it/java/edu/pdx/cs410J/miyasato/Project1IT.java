@@ -66,7 +66,7 @@ public class Project1IT extends InvokeMainTestCase {
     }
 
     @Test
-    public void invokingMainWithNineParametersForPrintPrintsExtraneousArgumentsToStandardError() {
+    public void invokingMainWithEightParametersForPrintPrintsExtraneousArgumentsToStandardError() {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
                 "1/15/2020", "19:39", "01/2/2020", "1:03", "1");
 
@@ -84,11 +84,70 @@ public class Project1IT extends InvokeMainTestCase {
     }
 
     @Test
-    public void invokingMainWithSevenOptionsPrintsCorrectOutputToStandardOutput() {
+    public void invokingMainWithSevenParametersForPrintPrintsCorrectOutputToStandardOutput() {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
                 "1/15/2020", "19:39", "01/2/2020", "1:03");
 
         assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
                 "Phone call from 808 to 200 from 1/15/2020 19:39 to 01/2/2020 1:03"));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithReadMeOptionPrintsReadMeToStandardOutput() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-README");
+
+        assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
+                "The Phone Bill Application reads in a series of options and arguments with information " +
+                        "regarding the phone bill and\r\nphone call, and parses the data in order to present the " +
+                        "user with a description of the PhoneCall."));
+    }
+
+    @Test
+    public void invokingMainWithReadMeThenPrintOptionWithNineCLArgumentsPrintsNoErrorToStandardError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-README", "-print", "customer", "808", "200",
+                "1/15/2020", "19:39", "01/2/2020", "1:03");
+
+        assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
+                ""));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithPrintThenReadMeOptionWithNineCLArgumentsPrintsNoErrorToStandardError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "-README", "customer", "808", "200",
+                "1/15/2020", "19:39", "01/2/2020", "1:03");
+
+        assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
+                ""));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithReadMeThenPrintOptionWithTwoCLArgumentsPrintsNoErrorToStandardError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-README", "-print");
+
+        assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
+                ""));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithPrintThenReadMeOptionWithTwoCLArgumentsPrintsNoErrorToStandardError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "-README");
+
+        assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
+                "0"));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithReadMeThenPrintOptionWithTenCLArgumentsPrintsNoErrorToStandardError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-README", "-print", "customer", "808", "200",
+                "1/15/2020", "19:39", "01/2/2020", "1:03", "1");
+
+        assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
+                ""));
+        assertThat(result.getExitCode(), equalTo(0));
     }
 }

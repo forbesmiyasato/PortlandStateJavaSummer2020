@@ -20,7 +20,7 @@ public class PhoneCallTest {
 
   @Test
   public void getStartTimeStringNeedsToBeImplemented() {
-    PhoneCall call = new PhoneCall("test", "test", "test", "test");
+    PhoneCall call = new PhoneCall(testCaller, testCallee, "test", "test");
     call.getStartTimeString();
   }
 
@@ -32,7 +32,7 @@ public class PhoneCallTest {
 
   @Test
   public void forProject1ItIsOkayIfGetStartTimeReturnsNull() {
-    PhoneCall call = new PhoneCall("test", "test", null, "test");
+    PhoneCall call = new PhoneCall(testCaller, testCallee, null, "test");
     assertThat(call.getStartTime(), is(nullValue()));
   }
 
@@ -90,6 +90,42 @@ public class PhoneCallTest {
     PhoneCall pc = createPhoneCall();
 
     assertThat(pc.toString(), containsString(testEndTime));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void EmptyCallerFormatThrowsIllegalArgumentException() {
+    new PhoneCall("", testCallee, testStartTime,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void InvalidCallerFormatThrowsIllegalArgumentException() {
+    new PhoneCall("1800-200-6188", testCallee, testStartTime,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void InvalidCallerFormatThrowsIllegalArgumentException2() {
+    new PhoneCall("800+200-6188", testCallee, testStartTime,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void EmptyCalleeFormatThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, "", testStartTime,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidCalleeFormatThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, "1800-200-6188", testStartTime,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidCalleeFormatThrowsIllegalArgumentException2() {
+    new PhoneCall(testCaller, "808-200+6188", testStartTime,
+            testEndTime);
   }
 
   public PhoneCall createPhoneCall() {
