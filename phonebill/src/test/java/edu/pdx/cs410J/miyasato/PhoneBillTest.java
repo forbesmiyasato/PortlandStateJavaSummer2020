@@ -2,7 +2,6 @@ package edu.pdx.cs410J.miyasato;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,6 +30,13 @@ public class PhoneBillTest {
         PhoneBill cPB = new PhoneBill("John");
 
         assertThat(cPB.getCustomer(), equalTo("John"));
+    }
+
+    @Test
+    public void getCustomerNameGetsCorrectCustomerFirstNameAndLastName () {
+        PhoneBill cPB = new PhoneBill("Brian Griffin");
+
+        assertThat(cPB.getCustomer(), equalTo("Brian Griffin"));
     }
 
     @Test
