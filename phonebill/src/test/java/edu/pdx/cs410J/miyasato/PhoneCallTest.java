@@ -20,7 +20,7 @@ public class PhoneCallTest {
 
   @Test
   public void getStartTimeStringNeedsToBeImplemented() {
-    PhoneCall call = new PhoneCall(testCaller, testCallee, "test", "test");
+    PhoneCall call = createPhoneCall();
     call.getStartTimeString();
   }
 
@@ -32,7 +32,7 @@ public class PhoneCallTest {
 
   @Test
   public void forProject1ItIsOkayIfGetStartTimeReturnsNull() {
-    PhoneCall call = new PhoneCall(testCaller, testCallee, null, "test");
+    PhoneCall call = new PhoneCall();
     assertThat(call.getStartTime(), is(nullValue()));
   }
 
@@ -93,7 +93,7 @@ public class PhoneCallTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void EmptyCallerFormatThrowsIllegalArgumentException() {
+  public void EmptyCallerThrowsIllegalArgumentException() {
     new PhoneCall("", testCallee, testStartTime,
             testEndTime);
   }
@@ -111,7 +111,7 @@ public class PhoneCallTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void EmptyCalleeFormatThrowsIllegalArgumentException() {
+  public void EmptyCalleeThrowsIllegalArgumentException() {
     new PhoneCall(testCaller, "", testStartTime,
             testEndTime);
   }
@@ -126,6 +126,42 @@ public class PhoneCallTest {
   public void invalidCalleeFormatThrowsIllegalArgumentException2() {
     new PhoneCall(testCaller, "808-200+6188", testStartTime,
             testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void EmptyStartTimeThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, testCallee, null,
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidStartTimeFormatThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, testCallee, "1/15/2020 19:390",
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidStartTimeFormatThrowsIllegalArgumentException2() {
+    new PhoneCall(testCaller, testCallee, "19:30 1/15/2020",
+            testEndTime);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void EmptyEndTimeThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, testCallee, testStartTime,
+            "");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidEndTimeFormatThrowsIllegalArgumentException() {
+    new PhoneCall(testCaller, testCallee, testStartTime,
+            "01/20/2020 101:10");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidEndTimeFormatThrowsIllegalArgumentException2() {
+    new PhoneCall(testCaller, testCallee, testStartTime,
+            "01/20//2020 01:10");
   }
 
   public PhoneCall createPhoneCall() {
