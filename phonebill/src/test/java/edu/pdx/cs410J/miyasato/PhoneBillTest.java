@@ -14,7 +14,7 @@ public class PhoneBillTest {
 
     @Test
     public void addPhoneCallAddsPhoneCallToPhoneBill () {
-        PhoneBill cPB = new PhoneBill();
+        PhoneBill cPB = new PhoneBill("test");
         PhoneCall cPC = createPhoneCall();
 
         cPB.addPhoneCall(cPC);
@@ -25,7 +25,7 @@ public class PhoneBillTest {
 
     @Test
     public void phoneBillInitiallyHasNoPhoneCalls () {
-        PhoneBill cPB = new PhoneBill();
+        PhoneBill cPB = new PhoneBill("test");
 
         assertThat("Phone bill initially has no phone calls", cPB.getPhoneCalls().size(), equalTo(0));
     }

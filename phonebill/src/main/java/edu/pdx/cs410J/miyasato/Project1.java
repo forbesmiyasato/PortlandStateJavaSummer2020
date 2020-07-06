@@ -8,6 +8,9 @@ import java.util.Arrays;
  */
 public class Project1 {
 
+  /**
+   * Prints the read me to standard output and terminates the application successfully
+   */
   public static void printReadMeAndExit() {
       InputStream readme = Project1.class.getResourceAsStream("README.txt");
       BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
@@ -24,11 +27,20 @@ public class Project1 {
       System.exit(0);
   }
 
+  /**
+   * Prints an error message to standard error and terminates the application unsuccessfully
+   * @param errorMessage The error message print to standard error
+   */
   private static void printErrorMessageAndExit(String errorMessage) {
     System.err.println(errorMessage);
     System.exit(1);
   }
 
+  /**
+   * Creates a new PhoneCall with the arguments passed in
+   * @param args The PhoneCall arguments
+   * @return The instantiated PhoneCall
+   */
   private static PhoneCall createPhoneCallWithArguments(String[] args) {
     PhoneCall pc;
     String callerNumber;
@@ -50,6 +62,14 @@ public class Project1 {
     return pc;
   }
 
+  /**
+   * Main program that parses the command line, handles invalid input,
+   * creates a PhoneCall and PhoneBill, and prints a description
+   * of the PhoneCalls within the PhoneBill to standard out by
+   * invoking PhoneCall's <code>toString</code> method.
+   *
+   * @param args The command line arguments
+   */
   public static void main(String[] args) {
     String customerName;
     PhoneCall phoneCall;
