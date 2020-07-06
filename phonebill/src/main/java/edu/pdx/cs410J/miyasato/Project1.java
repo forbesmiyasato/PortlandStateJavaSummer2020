@@ -1,21 +1,27 @@
 package edu.pdx.cs410J.miyasato;
 
 import java.io.*;
-import java.util.Scanner;
+import java.util.Arrays;
 
 /**
  * The main class for the CS410J Phone Bill Project
  */
 public class Project1 {
 
-  public static void printReadMe() throws IOException {
+  public static void printReadMeAndExit() {
       InputStream readme = Project1.class.getResourceAsStream("README.txt");
       BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
       String line;
 
-      while((line = reader.readLine()) != null) {
-        System.out.println(line);
-      }
+      try {
+        while ((line = reader.readLine()) != null) {
+          System.out.println(line);
+        }
+      } catch (IOException e){
+        System.err.println(e.getMessage());
+        System.exit(1);
+    }
+      System.exit(0);
   }
 
   private static void printErrorMessageAndExit(String errorMessage) {
@@ -23,60 +29,74 @@ public class Project1 {
     System.exit(1);
   }
 
-  public static void main(String[] args) {
-    String customerName;
+  private static PhoneCall createPhoneCallWithArguments(String[] args) {
+    PhoneCall pc;
     String callerNumber;
     String calleeNumber;
     String startDate;
     String startTime;
     String endDate;
     String endTime;
-    String options;
+
+    callerNumber = args[0];
+    calleeNumber = args[1];
+    startDate = args[2];
+    startTime = args[3];
+    endDate = args[4];
+    endTime = args[5];
+
+    pc = new PhoneCall(callerNumber, calleeNumber, startDate + " " + startTime, endDate + " " + endTime);
+
+    return pc;
+  }
+
+  public static void main(String[] args) {
+    String customerName;
     PhoneCall phoneCall;
     PhoneBill phoneBill;
+    Boolean print = false;
     int argumentLength = args.length;
-    int expectedArgumentLength = 8;
+    int startOfArguments = 0;
 
     if (argumentLength == 0) {
       printErrorMessageAndExit("Missing command line arguments");
     }
 
-    options = args[0];
+    //only the first two arguments could be valid options
+    for (startOfArguments = 0; startOfArguments < (2 < argumentLength ? 2 : argumentLength); startOfArguments++) {
+      if (!args[startOfArguments].startsWith("-")) {
+        break;
+      }
 
-    if (options.equals("-README")) {
-      try {
-        printReadMe();
-      } catch (IOException e) {
-        printErrorMessageAndExit(e.getMessage());
+      if (args[startOfArguments].startsWith("-") && (!args[startOfArguments].equals("-README") && !args[startOfArguments].equals("-print"))) {
+        printErrorMessageAndExit("INVALID OPTION!");
+      }
+      else if (args[startOfArguments].equals("-README")) {
+        printReadMeAndExit();
+      }
+      else if (args[startOfArguments].equals("-print")) {
+        print = true;
       }
     }
-    else if (options.equals("-print")) {
-      if (argumentLength > expectedArgumentLength) {
-        printErrorMessageAndExit("Extraneous command line arguments");
-      }
-      else if (argumentLength < expectedArgumentLength) {
-        printErrorMessageAndExit("Not enough command line arguments to print");
-      }
 
-      customerName = args[1];
-      callerNumber = args[2];
-      calleeNumber = args[3];
-      startDate = args[4];
-      startTime = args[5];
-      endDate = args[6];
-      endTime = args[7];
+    if (argumentLength - startOfArguments < 7) {
+      printErrorMessageAndExit("Missing command line arguments");
+    }
+    else if (argumentLength - startOfArguments > 7) {
+      printErrorMessageAndExit("Extraneous command line arguments");
+    }
 
-      String startTimeString = startDate + " " + startTime;
-      String endTimeString = endDate + " " + endTime;
-      phoneCall = new PhoneCall(callerNumber, calleeNumber, startTimeString, endTimeString);
-      phoneBill = new PhoneBill(customerName);
+    customerName = args[startOfArguments];
+    startOfArguments++;
 
-      phoneBill.addPhoneCall(phoneCall);
+    phoneBill = new PhoneBill(customerName);
 
+    phoneCall = createPhoneCallWithArguments(Arrays.copyOfRange(args, startOfArguments, argumentLength));
+
+    phoneBill.addPhoneCall(phoneCall);
+
+    if (print) {
       phoneBill.printPhoneCalls();
-    }
-    else {
-      printErrorMessageAndExit("INVALID OPTION!");
     }
 
     System.exit(0);

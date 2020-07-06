@@ -34,7 +34,7 @@ public class Project1IT extends InvokeMainTestCase {
     public void invokingMainWithNoParameterForPrintPrintsMissingArgumentsToStandardError() {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print");
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
-                "Not enough command line arguments to print"));
+                "Missing command line arguments"));
         assertThat(result.getExitCode(), equalTo(1));
 
     }
@@ -43,7 +43,7 @@ public class Project1IT extends InvokeMainTestCase {
     public void invokingMainWithOneParameterForPrintPrintsMissingArgumentsToStandardError() {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer");
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
-                "Not enough command line arguments to print"));
+                "Missing command line arguments"));
         assertThat(result.getExitCode(), equalTo(1));
     }
 
@@ -52,13 +52,13 @@ public class Project1IT extends InvokeMainTestCase {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
                 "1/15/2020", "19:39", "01/2/2020");
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
-                "Not enough command line arguments to print"));
+                "Missing command line arguments"));
         assertThat(result.getExitCode(), equalTo(1));
     }
 
     @Test
     public void invokingMainWithSevenParametersForPrintPrintsNoErrorToStandardError() {
-        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808-200-6188", "200-200-2000",
                 "1/15/2020", "19:39", "01/2/2020", "1:03");
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
                 ""));
@@ -85,11 +85,11 @@ public class Project1IT extends InvokeMainTestCase {
 
     @Test
     public void invokingMainWithSevenParametersForPrintPrintsCorrectOutputToStandardOutput() {
-        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808", "200",
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "customer", "808-200-6188", "200-200-2000",
                 "1/15/2020", "19:39", "01/2/2020", "1:03");
 
         assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
-                "Phone call from 808 to 200 from 1/15/2020 19:39 to 01/2/2020 1:03"));
+                "Phone call from 808-200-6188 to 200-200-2000 from 1/15/2020 19:39 to 01/2/2020 1:03"));
         assertThat(result.getExitCode(), equalTo(0));
     }
 
@@ -101,6 +101,8 @@ public class Project1IT extends InvokeMainTestCase {
                 "The Phone Bill Application reads in a series of options and arguments with information " +
                         "regarding the phone bill and\r\nphone call, and parses the data in order to present the " +
                         "user with a description of the PhoneCall."));
+
+        assertThat(result.getExitCode(), equalTo(0));
     }
 
     @Test
@@ -133,11 +135,15 @@ public class Project1IT extends InvokeMainTestCase {
     }
 
     @Test
-    public void invokingMainWithPrintThenReadMeOptionWithTwoCLArgumentsPrintsNoErrorToStandardError() {
+    public void invokingMainWithPrintThenReadMeOptionPrintsNoErrorToStandardErrorAndPrintsREADME() {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-print", "-README");
 
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
-                "0"));
+                ""));
+        assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
+                "The Phone Bill Application reads in a series of options and arguments with information " +
+                        "regarding the phone bill and\r\nphone call, and parses the data in order to present the " +
+                        "user with a description of the PhoneCall."));
         assertThat(result.getExitCode(), equalTo(0));
     }
 
@@ -148,6 +154,15 @@ public class Project1IT extends InvokeMainTestCase {
 
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
                 ""));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithSevenArgumentsAndNoOptionsPrintNothingToScreenAndExitsSuccessfully() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("customer", "808-200-6188", "200-200-2000",
+                "1/15/2020", "19:39", "01/2/2020", "1:03");
+
+        assertThat(result.getTextWrittenToStandardOut(), equalTo(""));
         assertThat(result.getExitCode(), equalTo(0));
     }
 }

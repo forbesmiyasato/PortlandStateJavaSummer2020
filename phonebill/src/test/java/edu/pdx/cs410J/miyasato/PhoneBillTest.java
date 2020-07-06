@@ -7,10 +7,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PhoneBillTest {
 
+    public final String testCaller = "808-200-6188";
+    public final String testCallee = "808-200-6188";
+    public final String testStartTime = "1/15/2020 19:39";
+    public final String testEndTime = "01/2/2020 1:03";
+
     @Test
     public void addPhoneCallAddsPhoneCallToPhoneBill () {
         PhoneBill cPB = new PhoneBill();
-        PhoneCall cPC = new PhoneCall("test", "test", "test", "test");
+        PhoneCall cPC = createPhoneCall();
 
         cPB.addPhoneCall(cPC);
 
@@ -49,8 +54,8 @@ public class PhoneBillTest {
     @Test public void phoneBillToStringHasTheCorrectAmountOfPhoneCalls () {
         PhoneBill cPB = new PhoneBill("John");
 
-        PhoneCall cPC = new PhoneCall("test", "test", "test", "test");
-        PhoneCall cPC2 = new PhoneCall("test", "test", "test", "test");
+        PhoneCall cPC = createPhoneCall();
+        PhoneCall cPC2 = createPhoneCall();
 
         cPB.addPhoneCall(cPC);
         cPB.addPhoneCall(cPC2);
@@ -58,14 +63,11 @@ public class PhoneBillTest {
         assertThat(cPB.toString(), containsString("2"));
     }
 
-//    @Test
-//    public void printPhoneCallsPrintsCorrectPhoneCalls() {
-//        PhoneCall cPC = new PhoneCall("test", "test", "test", "test");
-//        PhoneBill cPB = new PhoneBill("John");
-//
-//        cPB.addPhoneCall(cPC);
-//
-//        assertThat(cPB.printPhoneCalls(), containsString("1"));
-//    }
+    public PhoneCall createPhoneCall() {
+        PhoneCall pc = new PhoneCall(testCaller, testCallee, testStartTime,
+                testEndTime);
+
+        return pc;
+    }
 
 }
