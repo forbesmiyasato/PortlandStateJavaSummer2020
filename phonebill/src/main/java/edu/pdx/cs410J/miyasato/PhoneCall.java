@@ -44,13 +44,25 @@ public class PhoneCall extends AbstractPhoneCall {
     pEndTime = endTime;
   }
 
-  private void checkDateTimeFormat(String startTime, String errorMessage) {
+  /**
+   * Checks if the date time format for start time and end time is valid
+   * @param dateTime The date time as a String
+   * @param errorMessage The error message to print if invalid format
+   * @throws IllegalArgumentException if the format is invalid or date time is null
+   */
+  private void checkDateTimeFormat(String dateTime, String errorMessage) {
     String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2}$";
-    if (startTime == null || !startTime.matches(dateTimeRegex)) {
+    if (dateTime == null || !dateTime.matches(dateTimeRegex)) {
       throw new IllegalArgumentException(errorMessage);
     }
   }
 
+  /**
+   * Checks if the phone number format for caller and callee is valid
+   * @param phoneNumberString The phone number as a String
+   * @param errorMessage The error message to print if invalid format
+   * @throws IllegalArgumentException if the format is invalid or phone number is null
+   */
   private void checkPhoneNumberFormat(String phoneNumberString, String errorMessage) {
     String phoneNumberRegex = "^\\d{3}-\\d{3}-\\d{4}$";
     if (phoneNumberString == null || !phoneNumberString.matches(phoneNumberRegex)) {
