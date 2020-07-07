@@ -98,9 +98,7 @@ public class Project1IT extends InvokeMainTestCase {
         InvokeMainTestCase.MainMethodResult result = invokeMain("-README");
 
         assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
-                "The Phone Bill Application reads in a series of options and arguments with information " +
-                        "regarding the phone bill and\r\nphone call, and parses the data in order to present the " +
-                        "user with a description of the PhoneCall."));
+                "The Phone Bill Application reads in a series of options and arguments with information"));
 
         assertThat(result.getExitCode(), equalTo(0));
     }
@@ -141,9 +139,7 @@ public class Project1IT extends InvokeMainTestCase {
         assertThat(result.getTextWrittenToStandardError(), StringContains.containsString(
                 ""));
         assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
-                "The Phone Bill Application reads in a series of options and arguments with information " +
-                        "regarding the phone bill and\r\nphone call, and parses the data in order to present the " +
-                        "user with a description of the PhoneCall."));
+                "The Phone Bill Application reads in a series of options and arguments with information"));
         assertThat(result.getExitCode(), equalTo(0));
     }
 
