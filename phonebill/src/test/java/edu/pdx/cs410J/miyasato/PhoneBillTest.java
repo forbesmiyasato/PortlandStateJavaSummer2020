@@ -5,6 +5,10 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+
+/**
+ * Unit tests for the PhoneBill class
+ */
 public class PhoneBillTest {
 
     public final String testCaller = "808-200-6188";

@@ -164,6 +164,11 @@ public class PhoneCallTest {
             "01/20//2020 01:10");
   }
 
+//  @Test(expected = IllegalArgumentException.class)
+//  public void checkPhoneNumberFormatThrowsExceptionWithInvalidFormat() {
+//    checkPhoneNumberFormat("808+200+6188");
+//  }
+
   public PhoneCall createPhoneCall() {
     PhoneCall pc = new PhoneCall(testCaller, testCallee, testStartTime,
             testEndTime);

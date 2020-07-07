@@ -72,7 +72,7 @@ public class Project1 {
    */
   public static void main(String[] args) {
     String customerName;
-    PhoneCall phoneCall;
+    PhoneCall phoneCall = null;
     PhoneBill phoneBill;
     Boolean print = false;
     int argumentLength = args.length;
@@ -111,7 +111,11 @@ public class Project1 {
 
     phoneBill = new PhoneBill(customerName);
 
-    phoneCall = createPhoneCallWithArguments(Arrays.copyOfRange(args, startOfArguments, argumentLength));
+    try {
+      phoneCall = createPhoneCallWithArguments(Arrays.copyOfRange(args, startOfArguments, argumentLength));
+    } catch (IllegalArgumentException e) {
+      printErrorMessageAndExit(e.getMessage());
+    }
 
     phoneBill.addPhoneCall(phoneCall);
 

@@ -7,10 +7,10 @@ import edu.pdx.cs410J.AbstractPhoneCall;
  */
 public class PhoneCall extends AbstractPhoneCall {
 
-  private String pCaller;
-  private String pCallee;
-  private String pStartTime;
-  private String pEndTime;
+  private final String pCaller;
+  private final String pCallee;
+  private final String pStartTime;
+  private final String pEndTime;
 
   /**
    * Initializes the PhoneCall
@@ -31,25 +31,31 @@ public class PhoneCall extends AbstractPhoneCall {
    * @throws IllegalArgumentException if there's invalid argument input
    */
   public PhoneCall (String caller, String callee, String startTime, String endTime) {
-    String phoneNumberRegex = "^\\d{3}-\\d{3}-\\d{4}$";
     String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2}$";
-    if (caller == null || !caller.matches(phoneNumberRegex)) {
-      throw new IllegalArgumentException("Wrong format for Caller's phone number!");
-    }
-    if (callee == null || !callee.matches(phoneNumberRegex)) {
-      throw new IllegalArgumentException("Wrong format for Callee's phone number!");
-    }
-    if (startTime == null || !startTime.matches(dateTimeRegex)) {
-      throw new IllegalArgumentException("Wrong format for start time!");
-    }
-    if (endTime == null || !endTime.matches(dateTimeRegex)) {
-      throw new IllegalArgumentException("Wrong format for end time!");
-    }
+
+    checkPhoneNumberFormat(caller, "Wrong format for Caller's phone number!");
+    checkPhoneNumberFormat(callee, "Wrong format for Callee's phone number!");
+    checkDateTimeFormat(startTime, "Wrong format for start time!");
+    checkDateTimeFormat(endTime, "Wrong format for end time!");
 
     pCaller = caller;
     pCallee = callee;
     pStartTime = startTime;
     pEndTime = endTime;
+  }
+
+  private void checkDateTimeFormat(String startTime, String errorMessage) {
+    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2}$";
+    if (startTime == null || !startTime.matches(dateTimeRegex)) {
+      throw new IllegalArgumentException(errorMessage);
+    }
+  }
+
+  private void checkPhoneNumberFormat(String phoneNumberString, String errorMessage) {
+    String phoneNumberRegex = "^\\d{3}-\\d{3}-\\d{4}$";
+    if (phoneNumberString == null || !phoneNumberString.matches(phoneNumberRegex)) {
+      throw new IllegalArgumentException(errorMessage);
+    }
   }
 
 

@@ -1,6 +1,7 @@
 This is a README file!
 
 CS410J Project 1 : Designing a Phone Bill Application
+Forbes Miyasato
 
 The Phone Bill Application reads in a series of options and arguments with information regarding the phone bill and
 phone call, and parses the data in order to present the user with a description of the PhoneCall.
