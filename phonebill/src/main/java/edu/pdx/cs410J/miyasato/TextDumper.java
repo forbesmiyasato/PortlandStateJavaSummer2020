@@ -47,5 +47,7 @@ public class TextDumper implements PhoneBillDumper<PhoneBill> {
             writer.write(phoneCall.getEndTimeString());
             writer.newLine();
         }
+
+        writer.close();
     }
 }

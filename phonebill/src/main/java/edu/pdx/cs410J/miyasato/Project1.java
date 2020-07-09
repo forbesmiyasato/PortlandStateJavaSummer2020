@@ -1,6 +1,9 @@
 package edu.pdx.cs410J.miyasato;
 
+import edu.pdx.cs410J.ParserException;
+
 import java.io.*;
+import java.text.ParseException;
 import java.util.Arrays;
 
 /**
@@ -75,8 +78,11 @@ public class Project1 {
     public static void main(String[] args) {
         String customerName;
         PhoneCall phoneCall = null;
-        PhoneBill phoneBill;
+        PhoneBill phoneBill = null;
+        TextParser textParser;
+        TextDumper textDumper;
         Boolean print = false;
+        String textFile = null;
         int argumentLength = args.length;
         int startOfArguments = 0;
 
@@ -85,17 +91,20 @@ public class Project1 {
         }
 
         //only the first two arguments could be valid options
-        for (startOfArguments = 0; startOfArguments < (2 < argumentLength ? 2 : argumentLength); startOfArguments++) {
+        for (startOfArguments = 0; startOfArguments < (Math.min(4, argumentLength)); startOfArguments++) {
             if (!args[startOfArguments].startsWith("-")) {
                 break;
             }
 
-            if (args[startOfArguments].startsWith("-") && (!args[startOfArguments].equals("-README") && !args[startOfArguments].equals("-print"))) {
+            if (args[startOfArguments].startsWith("-") && (!args[startOfArguments].equals("-README")
+                    && !args[startOfArguments].equals("-print") && !args[startOfArguments].equals("-textFile"))) {
                 printErrorMessageAndExit("INVALID OPTION!");
             } else if (args[startOfArguments].equals("-README")) {
                 printReadMeAndExit();
             } else if (args[startOfArguments].equals("-print")) {
                 print = true;
+            } else if (args[startOfArguments].equals("-textFile")) {
+                textFile = args[++startOfArguments];
             }
         }
 
@@ -108,7 +117,23 @@ public class Project1 {
         customerName = args[startOfArguments];
         startOfArguments++;
 
-        phoneBill = new PhoneBill(customerName);
+        if (textFile != null) {
+            textParser = new TextParser(textFile, customerName);
+            textDumper = new TextDumper(textFile);
+            try {
+                phoneBill = textParser.parse();
+            } catch (ParserException e) {
+                printErrorMessageAndExit(e.getMessage());
+            }
+
+            try {
+                textDumper.dump(phoneBill);
+            } catch (IOException e) {
+                printErrorMessageAndExit(e.getMessage());
+            }
+        } else {
+            phoneBill = new PhoneBill(customerName);
+        }
 
         try {
             phoneCall = createPhoneCallWithArguments(Arrays.copyOfRange(args, startOfArguments, argumentLength));
@@ -119,7 +144,7 @@ public class Project1 {
         phoneBill.addPhoneCall(phoneCall);
 
         if (print) {
-            phoneBill.printPhoneCalls();
+           phoneCall.toString();
         }
 
         System.exit(0);

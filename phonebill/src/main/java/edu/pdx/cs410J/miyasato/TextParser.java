@@ -4,18 +4,37 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.PhoneBillParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class TextParser implements PhoneBillParser {
-    BufferedReader textReader;
+public class TextParser implements PhoneBillParser<PhoneBill> {
+    String fileName;
+    String customerName;
 
-    TextParser(BufferedReader reader) {
-        textReader = reader;
+    TextParser(String fileName, String customerName) {
+        this.fileName = fileName;
+        this.customerName = customerName;
     }
 
     @Override
-    public AbstractPhoneBill parse() throws ParserException {
+    public PhoneBill parse() throws ParserException {
+//        Path currentRelativePath = Paths.get("");
+//        String currentDirectory = currentRelativePath.toAbsolutePath().toString();
+//        File file = new File(currentDirectory + "/" + fileName);
+//        try {
+//            if (file.createNewFile()) {
+//                return new PhoneBill(customerName);
+//            }
+//        } catch (IOException e) {
+//            throw new ParserException(e.getMessage());
+//        }
+
+        InputStream inputStream = Project1.class.getResourceAsStream(fileName);
+        BufferedReader textReader = new BufferedReader(new InputStreamReader(inputStream));
+
         String line;
         int lineCount = 0;
         PhoneBill phoneBill = null;
