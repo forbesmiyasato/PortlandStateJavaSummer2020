@@ -4,20 +4,19 @@ import edu.pdx.cs410J.InvokeMainTestCase;
 import org.hamcrest.core.StringContains;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Tests the functionality in the {@link Project1} main class.
+ * Tests the functionality in the {@link Project2} main class.
  */
-public class Project1IT extends InvokeMainTestCase {
+public class Project2IT extends InvokeMainTestCase {
 
     /**
-     * Invokes the main method of {@link Project1} with the given arguments.
+     * Invokes the main method of {@link Project2} with the given arguments.
      */
     private MainMethodResult invokeMain(String... args) {
-        return invokeMain(Project1.class, args);
+        return invokeMain(Project2.class, args);
     }
 
     /**
@@ -159,6 +158,50 @@ public class Project1IT extends InvokeMainTestCase {
                 "1/15/2020", "19:39", "01/2/2020", "1:03");
 
         assertThat(result.getTextWrittenToStandardOut(), equalTo(""));
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithTextFileOptionAndNoTextFileCausesAnError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-textFile");
+
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing file name and command line arguments"));
+        assertThat(result.getExitCode(), equalTo(1));
+    }
+
+    @Test
+    public void invokingMainWithTextFileOptionAndJustTextFileNameCausesAnError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-textFile", "test");
+
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing command line arguments"));
+        assertThat(result.getExitCode(), equalTo(1));
+    }
+
+    @Test
+    public void invokingMainWithTextFileOptionAndTextFileNameAndValidArgumentsDoesNotCauseAnError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-textFile", "test", "Test", "808-200-6188",
+                "200-200-2000", "1/15/2020", "19:39", "01/2/2020", "1:03");
+
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithTextFileOptionAndTextFileNameAndInvalidArgumentsWithReadMeDoesNotCauseAnError() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-textFile", "test", "-README", "Test", "808-200-6188",
+                "200-200-2000", "1/15/2020", "19:39", "01+2/2020");
+
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void invokingMainWithPrintAndTextFileOptionAndTextFileNameAndValidArgumentsWithReadMeDoesNotPrint() {
+        InvokeMainTestCase.MainMethodResult result = invokeMain("-textFile", "test", "-README", "Test", "808-200-6188",
+                "200-200-2000", "1/15/2020", "19:39", "01/2/2020", "12:15");
+
+        assertThat(result.getTextWrittenToStandardOut(), StringContains.containsString(
+                "The Phone Bill Application reads in a series of options and arguments with information"));
+        assertThat(result.getTextWrittenToStandardOut(), not(containsString("Phone call from 808-200-6188 to " +
+                "200-200-2000 from 1/15/2020 19:39 to 01/2/2020 12:15")));
         assertThat(result.getExitCode(), equalTo(0));
     }
 }

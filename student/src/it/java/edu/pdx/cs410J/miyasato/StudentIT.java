@@ -24,6 +24,4 @@ public class StudentIT extends InvokeMainTestCase {
     InvokeMainTestCase.MainMethodResult result = invokeMain(Student.class);
     assertThat(result.getTextWrittenToStandardError(), containsString("Missing command line arguments"));
   }
-
-
 }
