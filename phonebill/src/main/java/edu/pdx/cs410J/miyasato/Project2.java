@@ -3,6 +3,7 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.Arrays;
 
 /**
@@ -83,7 +84,7 @@ public class Project2 {
         PhoneBill phoneBill = null;
         TextParser textParser;
         TextDumper textDumper;
-        File file;
+        File file = null;
         Boolean print = false;
         Boolean textOption = false;
         String textFile = null;
@@ -109,7 +110,10 @@ public class Project2 {
                 print = true;
             } else if (args[startOfArguments].equals("-textFile")) {
                 textOption = true;
-                textFile = args[++startOfArguments];
+                if (++startOfArguments >= argumentLength) {
+                    printErrorMessageAndExit("Missing file name and command line arguments");
+                }
+                textFile = args[startOfArguments];
             }
         }
 
@@ -126,6 +130,11 @@ public class Project2 {
             file = new File(textFile);
             if (file.exists()) {
                 textParser = new TextParser(file, customerName);
+                try {
+                    phoneBill = textParser.parse();
+                } catch (ParserException e) {
+                    printErrorMessageAndExit(e.getMessage());
+                }
             } else {
                 phoneBill = new PhoneBill(customerName);
             }
@@ -140,6 +149,12 @@ public class Project2 {
         if (textOption) {
             assert phoneBill != null;
             phoneBill.addPhoneCall(phoneCall);
+            textDumper = new TextDumper(file);
+            try {
+                textDumper.dump(phoneBill);
+            } catch (IOException e) {
+                printErrorMessageAndExit(e.getMessage());
+            }
         }
 
         if (print) {

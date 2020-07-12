@@ -40,7 +40,7 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 if (st.hasMoreTokens()) {
                     String nameInFile = st.nextToken();
                     if (!phoneBill.getCustomer().equals(nameInFile)) {
-                        throw new ParserException("Customer name's do not match!");
+                        throw new ParserException("Customer names do not match!");
                     }
                 }
             }
