@@ -22,10 +22,13 @@ public class Project2 {
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
+
+            reader.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
+
         System.exit(0);
     }
 

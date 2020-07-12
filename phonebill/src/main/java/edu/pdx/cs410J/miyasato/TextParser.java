@@ -4,6 +4,8 @@ import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.PhoneBillParser;
 
 import java.io.*;
+import java.text.ParseException;
+import java.util.StringTokenizer;
 
 public class TextParser implements PhoneBillParser<PhoneBill> {
     File file;
@@ -16,59 +18,49 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
 
     @Override
     public PhoneBill parse() throws ParserException {
-////        Path currentRelativePath = Paths.get("");
-////        String currentDirectory = currentRelativePath.toAbsolutePath().toString();
-////        File file = new File(currentDirectory + "/" + fileName);
-////        try {
-////            if (file.createNewFile()) {
-////                return new PhoneBill(customerName);
-////            }
-////        } catch (IOException e) {
-////            throw new ParserException(e.getMessage());
-////        }
-//
-//        InputStream inputStream = Project2.class.getResourceAsStream(file);
-//        BufferedReader textReader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//        String line;
-//        int lineCount = 0;
-//        PhoneBill phoneBill = null;
-//        String customerName;
-//        String caller = null;
-//        String callee = null;
-//        String start = null;
-//        String end = null;
-//
-//        try {
-//            customerName = textReader.readLine();
-//            phoneBill = new PhoneBill(customerName);
-//            while ((line = textReader.readLine()) != null) {
-//                switch (lineCount % 4) {
-//                    case 0:
-//                        caller = line;
-//                        break;
-//                    case 1:
-//                        callee = line;
-//                        break;
-//                    case 2:
-//                        start = line;
-//                        break;
-//                    case 3:
-//                        end = line;
-//                        break;
-//                }
-//
-//                if (lineCount % 4 == 0 && lineCount > 0) {
-//                    PhoneCall phoneCall = new PhoneCall(caller, callee, start, end);
-//                    phoneBill.addPhoneCall(phoneCall);
-//                }
-//
-//                lineCount++;
-//            }
-//        } catch (IOException e) {
-//            throw new ParserException(e.getMessage());
-//        }
-//
-        return new PhoneBill("1");
+        PhoneBill phoneBill = new PhoneBill(customerName);
+        FileReader fileReader;
+        BufferedReader reader;
+        try {
+            fileReader = new FileReader(file);
+            reader = new BufferedReader(fileReader);
+        } catch (FileNotFoundException e) {
+            throw new ParserException("File not found!");
+        }
+
+
+        String line;
+        StringTokenizer st;
+        String[] args;
+        int counter = 0;
+
+        try {
+            if ((line = reader.readLine()) != null) {
+                st = new StringTokenizer(line, " ");
+                if (st.hasMoreTokens()) {
+                    String nameInFile = st.nextToken();
+                    if (!phoneBill.getCustomer().equals(nameInFile)) {
+                        throw new ParserException("Customer name's do not match!");
+                    }
+                }
+            }
+            while ((line = reader.readLine()) != null) {
+                st = new StringTokenizer(line, " ");
+                args = new String[6];
+                while (st.hasMoreTokens()) {
+                    args[counter] = st.nextToken();
+                    counter++;
+                }
+                counter = 0;
+                PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3],
+                        args[4] + " " + args[5]);
+                phoneBill.addPhoneCall(phoneCall);
+            }
+            reader.close();
+        } catch (IOException e) {
+            throw new ParserException(e.getMessage());
+        }
+
+        return phoneBill;
     }
 }
