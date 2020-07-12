@@ -3,19 +3,18 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.Arrays;
 
 /**
  * The main class for the CS410J Phone Bill Project
  */
-public class Project1 {
+public class Project2 {
 
     /**
      * Prints the read me to standard output and terminates the application successfully
      */
     public static void printReadMeAndExit() {
-        InputStream readme = Project1.class.getResourceAsStream("README.txt");
+        InputStream readme = Project2.class.getResourceAsStream("README.txt");
         BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
         String line;
 
@@ -81,7 +80,9 @@ public class Project1 {
         PhoneBill phoneBill = null;
         TextParser textParser;
         TextDumper textDumper;
+        File file;
         Boolean print = false;
+        Boolean textOption = false;
         String textFile = null;
         int argumentLength = args.length;
         int startOfArguments = 0;
@@ -104,6 +105,7 @@ public class Project1 {
             } else if (args[startOfArguments].equals("-print")) {
                 print = true;
             } else if (args[startOfArguments].equals("-textFile")) {
+                textOption = true;
                 textFile = args[++startOfArguments];
             }
         }
@@ -117,22 +119,13 @@ public class Project1 {
         customerName = args[startOfArguments];
         startOfArguments++;
 
-        if (textFile != null) {
-            textParser = new TextParser(textFile, customerName);
-            textDumper = new TextDumper(textFile);
-            try {
-                phoneBill = textParser.parse();
-            } catch (ParserException e) {
-                printErrorMessageAndExit(e.getMessage());
+        if (textOption) {
+            file = new File(textFile);
+            if (file.exists()) {
+                textParser = new TextParser(file, customerName);
+            } else {
+                phoneBill = new PhoneBill(customerName);
             }
-
-            try {
-                textDumper.dump(phoneBill);
-            } catch (IOException e) {
-                printErrorMessageAndExit(e.getMessage());
-            }
-        } else {
-            phoneBill = new PhoneBill(customerName);
         }
 
         try {
@@ -141,10 +134,14 @@ public class Project1 {
             printErrorMessageAndExit(e.getMessage());
         }
 
-        phoneBill.addPhoneCall(phoneCall);
+        if (textOption) {
+            assert phoneBill != null;
+            phoneBill.addPhoneCall(phoneCall);
+        }
 
         if (print) {
-           phoneCall.toString();
+            assert phoneCall != null;
+            System.out.println(phoneCall.toString());
         }
 
         System.exit(0);
