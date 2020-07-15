@@ -54,13 +54,20 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 st = new StringTokenizer(line, " ");
                 args = new String[6];
                 while (st.hasMoreTokens()) {
+                    if (counter >= 6) {
+                        throw new ParserException("Malformatted File! Too much Arguments!");
+                    }
                     args[counter] = st.nextToken();
                     counter++;
                 }
                 counter = 0;
-                PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3],
-                        args[4] + " " + args[5]);
-                phoneBill.addPhoneCall(phoneCall);
+                try {
+                    PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3],
+                            args[4] + " " + args[5]);
+                    phoneBill.addPhoneCall(phoneCall);
+                } catch (IllegalArgumentException e) {
+                    throw new ParserException("Malformatted File! Invalid Phone Call Argument!");
+                }
             }
             reader.close();
         } catch (

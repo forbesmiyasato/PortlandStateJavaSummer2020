@@ -30,4 +30,13 @@ public class TextParserTest {
         PhoneBill phoneBill = textParser.parse();
         assertThat(phoneBill.getCustomer(), equalTo("Test"));
     }
+
+    @Test (expected = ParserException.class)
+    public void exceptionThrownForMalformattedTextFile() throws ParserException {
+        InputStream testFile = getClass().getResourceAsStream("MalformattedPhoneBill.txt");
+        TextParser textParser = new TextParser(new InputStreamReader(testFile), "Test");
+
+        PhoneBill phoneBill = textParser.parse();
+        assertThat(phoneBill.getCustomer(), equalTo("Test"));
+    }
 }
