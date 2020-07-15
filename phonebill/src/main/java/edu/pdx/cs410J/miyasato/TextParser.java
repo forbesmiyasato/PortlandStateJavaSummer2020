@@ -7,27 +7,34 @@ import java.io.*;
 import java.text.ParseException;
 import java.util.StringTokenizer;
 
+/**
+ * This class represents a TextParser, and implements PhoneBillParser
+ */
 public class TextParser implements PhoneBillParser<PhoneBill> {
-    File file;
+    Reader reader;
     String customerName;
 
-    TextParser(File file, String customerName) {
-        this.file = file;
+    /**
+     * Initializes the TextParser
+     * @param reader The reader that specifies how to read data
+     * @param customerName Person whose phone bill we're modeling
+     */
+    TextParser(Reader reader, String customerName) {
+        this.reader = reader;
         this.customerName = customerName;
     }
 
+    /**
+     * Parses the content of a phone bill into a new PhoneBill object
+     * @return The parsed Phone Bill based on the data stored
+     * @throws ParserException
+     */
     @Override
     public PhoneBill parse() throws ParserException {
         PhoneBill phoneBill = new PhoneBill(customerName);
-        FileReader fileReader;
         BufferedReader reader;
-        try {
-            fileReader = new FileReader(file);
-            reader = new BufferedReader(fileReader);
-        } catch (FileNotFoundException e) {
-            throw new ParserException("File not found!");
-        }
 
+        reader = new BufferedReader(this.reader);
 
         String line;
         StringTokenizer st;

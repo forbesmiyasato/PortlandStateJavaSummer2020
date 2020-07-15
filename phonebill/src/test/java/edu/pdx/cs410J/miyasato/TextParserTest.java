@@ -4,6 +4,8 @@ import edu.pdx.cs410J.ParserException;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
@@ -11,8 +13,8 @@ import static org.hamcrest.CoreMatchers.*;
 public class TextParserTest {
     @Test
     public void checkIfTextParserWorks () throws ParserException {
-        File file = new File("test");
-        TextParser textParser = new TextParser(file, "Test");
+        InputStream testFile = getClass().getResourceAsStream("ParserTestPhoneBill.txt");
+        TextParser textParser = new TextParser(new InputStreamReader(testFile), "Test");
 
         PhoneBill phoneBill = textParser.parse();
 
@@ -23,11 +25,10 @@ public class TextParserTest {
 
     @Test (expected = ParserException.class)
     public void exceptionThrownIfCustomerNamesDoNotMatch() throws ParserException {
-        File file = new File("test");
-        TextParser textParser = new TextParser(file, "false");
+        InputStream testFile = getClass().getResourceAsStream("ParserTestPhoneBill.txt");
+        TextParser textParser = new TextParser(new InputStreamReader(testFile), "false");
 
         PhoneBill phoneBill = textParser.parse();
-
         assertThat(phoneBill.getCustomer(), equalTo("Test"));
     }
 }

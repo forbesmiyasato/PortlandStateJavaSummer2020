@@ -2,8 +2,11 @@ package edu.pdx.cs410J.miyasato;
 
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+
+import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TextDumperTest {
 
@@ -14,8 +17,8 @@ public class TextDumperTest {
 
     @Test
     public void testIfDumperWorks() throws IOException {
-        File file = new File("test");
-        TextDumper textDumper = new TextDumper(file);
+        StringWriter writer = new StringWriter();
+        TextDumper textDumper = new TextDumper(writer);
         PhoneBill phoneBill = new PhoneBill("Test");
         PhoneCall phoneCall = createPhoneCall();
 
@@ -23,6 +26,10 @@ public class TextDumperTest {
         phoneBill.addPhoneCall(phoneCall);
 
         textDumper.dump(phoneBill);
+
+        assertThat(writer.toString().trim().replace("\r",""), containsString("Test\n" +
+                "808-200-6188 808-200-6188 1/15/2020 19:39 01/2/2020 1:03\n" +
+                "808-200-6188 808-200-6188 1/15/2020 19:39 01/2/2020 1:03"));
     }
 
     public PhoneCall createPhoneCall() {

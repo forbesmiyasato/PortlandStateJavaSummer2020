@@ -129,10 +129,10 @@ public class Project2 {
         if (textOption) {
             file = new File(textFile);
             if (file.exists()) {
-                textParser = new TextParser(file, customerName);
                 try {
+                    textParser = new TextParser(new FileReader(file), customerName);
                     phoneBill = textParser.parse();
-                } catch (ParserException e) {
+                } catch (FileNotFoundException | ParserException e) {
                     printErrorMessageAndExit(e.getMessage());
                 }
             } else {
@@ -149,8 +149,8 @@ public class Project2 {
         if (textOption) {
             assert phoneBill != null;
             phoneBill.addPhoneCall(phoneCall);
-            textDumper = new TextDumper(file);
             try {
+                textDumper = new TextDumper(new FileWriter(file));
                 textDumper.dump(phoneBill);
             } catch (IOException e) {
                 printErrorMessageAndExit(e.getMessage());
