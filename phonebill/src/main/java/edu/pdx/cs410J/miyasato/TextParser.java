@@ -16,7 +16,8 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
 
     /**
      * Initializes the TextParser
-     * @param reader The reader that specifies how to read data
+     *
+     * @param reader       The reader that specifies how to read data
      * @param customerName Person whose phone bill we're modeling
      */
     TextParser(Reader reader, String customerName) {
@@ -26,6 +27,7 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
 
     /**
      * Parses the content of a phone bill into a new PhoneBill object
+     *
      * @return The parsed Phone Bill based on the data stored
      * @throws ParserException
      */
@@ -43,12 +45,9 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
 
         try {
             if ((line = reader.readLine()) != null) {
-                st = new StringTokenizer(line, " ");
-                if (st.hasMoreTokens()) {
-                    String nameInFile = st.nextToken();
-                    if (!phoneBill.getCustomer().equals(nameInFile)) {
-                        throw new ParserException("Customer names do not match!");
-                    }
+                String nameInFile = line;
+                if (!phoneBill.getCustomer().equals(nameInFile)) {
+                    throw new ParserException("Customer names do not match!");
                 }
             }
             while ((line = reader.readLine()) != null) {
@@ -64,7 +63,8 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 phoneBill.addPhoneCall(phoneCall);
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             throw new ParserException(e.getMessage());
         }
 
