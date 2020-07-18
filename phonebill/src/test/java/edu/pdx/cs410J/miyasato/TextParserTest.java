@@ -19,7 +19,7 @@ public class TextParserTest {
 
         assertThat(phoneBill.getCustomer(), equalTo("Test"));
         assertThat(phoneBill.getPhoneCalls().toArray()[0].toString(), equalTo("Phone call from 808-200-6188 to " +
-                "808-200-6188 from 1/15/2020 19:39 to 01/2/2020 1:03"));
+                "808-200-6188 from 1/1/20, 1:39 AM to 1/2/20, 1:03 PM"));
     }
 
     @Test (expected = ParserException.class)

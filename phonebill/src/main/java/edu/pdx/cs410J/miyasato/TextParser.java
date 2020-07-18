@@ -52,9 +52,9 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
             }
             while ((line = reader.readLine()) != null) {
                 st = new StringTokenizer(line, " ");
-                args = new String[6];
+                args = new String[8];
                 while (st.hasMoreTokens()) {
-                    if (counter >= 6) {
+                    if (counter >= 8) {
                         throw new ParserException("Malformatted File! Too much Arguments!");
                     }
                     args[counter] = st.nextToken();
@@ -62,8 +62,8 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 }
                 counter = 0;
                 try {
-                    PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3],
-                            args[4] + " " + args[5]);
+                    PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3] + " " + args[4],
+                            args[5] + " " + args[6] + " " + args[7]);
                     phoneBill.addPhoneCall(phoneCall);
                 } catch (IllegalArgumentException e) {
                     throw new ParserException("Malformatted File! Invalid Phone Call Argument!");

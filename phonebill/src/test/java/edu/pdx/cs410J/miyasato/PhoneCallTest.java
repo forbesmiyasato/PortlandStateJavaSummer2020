@@ -15,7 +15,7 @@ public class PhoneCallTest {
 
   public final String testCaller = "808-200-6188";
   public final String testCallee = "808-200-6188";
-  public final String testStartTime = "1/15/2020 9:39 am";
+  public final String testStartTime = "1/1/2020 9:39 am";
   public final String testEndTime = "01/2/2020 1:03 pm";
 
   @Test
@@ -54,7 +54,7 @@ public class PhoneCallTest {
   public void checkIfGetStartTimeStringGetsCorrectStartTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getStartTimeString(), "1/15/20, 9:39 AM");
+    assertEquals(pc.getStartTimeString(), "1/1/20, 9:39 AM");
   }
 
   @Test
@@ -82,7 +82,7 @@ public class PhoneCallTest {
   public void phoneCallToStringHasCorrectStartTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertThat(pc.toString(), containsString("1/15/20, 9:39 AM"));
+    assertThat(pc.toString(), containsString("1/1/20, 9:39 AM"));
   }
 
   @Test

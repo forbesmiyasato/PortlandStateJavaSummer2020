@@ -12,8 +12,8 @@ public class TextDumperTest {
 
     public final String testCaller = "808-200-6188";
     public final String testCallee = "808-200-6188";
-    public final String testStartTime = "1/15/2020 19:39";
-    public final String testEndTime = "01/2/2020 1:03";
+    public final String testStartTime = "1/1/2020 1:39 am";
+    public final String testEndTime = "01/2/2020 1:03 PM";
 
     @Test
     public void testIfDumperWorks() throws IOException {
@@ -28,8 +28,8 @@ public class TextDumperTest {
         textDumper.dump(phoneBill);
 
         assertThat(writer.toString().trim().replace("\r",""), containsString("Test\n" +
-                "808-200-6188 808-200-6188 1/15/2020 19:39 01/2/2020 1:03\n" +
-                "808-200-6188 808-200-6188 1/15/2020 19:39 01/2/2020 1:03"));
+                "808-200-6188 808-200-6188 1/1/20, 1:39 AM 1/2/20, 1:03 PM\n" +
+                "808-200-6188 808-200-6188 1/1/20, 1:39 AM 1/2/20, 1:03 PM"));
     }
 
     public PhoneCall createPhoneCall() {

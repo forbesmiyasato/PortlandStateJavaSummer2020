@@ -13,8 +13,8 @@ public class PhoneBillTest {
 
     public final String testCaller = "808-200-6188";
     public final String testCallee = "808-200-6188";
-    public final String testStartTime = "1/15/2020 19:39";
-    public final String testEndTime = "01/2/2020 1:03";
+    public final String testStartTime = "1/1/2020 9:39 pm";
+    public final String testEndTime = "01/2/2020 1:03 am";
 
     @Test
     public void addPhoneCallAddsPhoneCallToPhoneBill () {
