@@ -15,8 +15,8 @@ public class PhoneCallTest {
 
   public final String testCaller = "808-200-6188";
   public final String testCallee = "808-200-6188";
-  public final String testStartTime = "1/15/2020 19:39";
-  public final String testEndTime = "01/2/2020 1:03";
+  public final String testStartTime = "1/15/2020 9:39 am";
+  public final String testEndTime = "01/2/2020 1:03 pm";
 
   @Test
   public void getStartTimeStringNeedsToBeImplemented() {
@@ -54,14 +54,14 @@ public class PhoneCallTest {
   public void checkIfGetStartTimeStringGetsCorrectStartTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getStartTimeString(), testStartTime);
+    assertEquals(pc.getStartTimeString(), "1/15/20, 9:39 AM");
   }
 
   @Test
   public void checkIfGetEndTimeStringGetsCorrectEndTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertEquals(pc.getEndTimeString(), testEndTime);
+    assertEquals(pc.getEndTimeString(), "1/2/20, 1:03 PM");
   }
 
   @Test
@@ -82,14 +82,14 @@ public class PhoneCallTest {
   public void phoneCallToStringHasCorrectStartTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertThat(pc.toString(), containsString(testStartTime));
+    assertThat(pc.toString(), containsString("1/15/20, 9:39 AM"));
   }
 
   @Test
   public void phoneCallToStringHasCorrectEndTime() {
     PhoneCall pc = createPhoneCall();
 
-    assertThat(pc.toString(), containsString(testEndTime));
+    assertThat(pc.toString(), containsString("1/2/20, 1:03 PM"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -136,13 +136,13 @@ public class PhoneCallTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidStartTimeFormatThrowsIllegalArgumentException() {
-    new PhoneCall(testCaller, testCallee, "1/15/2020 19:390",
+    new PhoneCall(testCaller, testCallee, "1/15/2020 19:39 PM",
             testEndTime);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidStartTimeFormatThrowsIllegalArgumentException2() {
-    new PhoneCall(testCaller, testCallee, "19:30 1/15/2020",
+    new PhoneCall(testCaller, testCallee, "19:30 1/15/2020 AM",
             testEndTime);
   }
 
@@ -155,13 +155,13 @@ public class PhoneCallTest {
   @Test(expected = IllegalArgumentException.class)
   public void invalidEndTimeFormatThrowsIllegalArgumentException() {
     new PhoneCall(testCaller, testCallee, testStartTime,
-            "01/20/2020 101:10");
+            "01/20/2020 01:80 pm");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidEndTimeFormatThrowsIllegalArgumentException2() {
     new PhoneCall(testCaller, testCallee, testStartTime,
-            "01/20//2020 01:10");
+            "01/20/2020 01:109 am");
   }
 
 //  @Test(expected = IllegalArgumentException.class)

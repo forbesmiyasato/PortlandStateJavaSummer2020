@@ -2,6 +2,11 @@ package edu.pdx.cs410J.miyasato;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * This class represents a PhoneCall, and extends AbstractPhoneCall
  */
@@ -9,8 +14,8 @@ public class PhoneCall extends AbstractPhoneCall {
 
   private final String pCaller;
   private final String pCallee;
-  private final String pStartTime;
-  private final String pEndTime;
+  private final Date pStartTime;
+  private final Date pEndTime;
 
   /**
    * Initializes the PhoneCall
@@ -31,17 +36,22 @@ public class PhoneCall extends AbstractPhoneCall {
    * @throws IllegalArgumentException if there's invalid argument input
    */
   public PhoneCall (String caller, String callee, String startTime, String endTime) {
-    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2}$";
-
     checkPhoneNumberFormat(caller, "Wrong format for Caller's phone number!");
     checkPhoneNumberFormat(callee, "Wrong format for Callee's phone number!");
     checkDateTimeFormat(startTime, "Wrong format for start time!");
     checkDateTimeFormat(endTime, "Wrong format for end time!");
 
+    String pattern = "MM/dd/yyyy hh:mm aa";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     pCaller = caller;
     pCallee = callee;
-    pStartTime = startTime;
-    pEndTime = endTime;
+    simpleDateFormat.setLenient(false);
+    try {
+      pStartTime = simpleDateFormat.parse(startTime);
+      pEndTime = simpleDateFormat.parse(endTime);
+    } catch (ParseException e) {
+      throw new IllegalArgumentException(e.getMessage());
+    }
   }
 
   /**
@@ -51,7 +61,7 @@ public class PhoneCall extends AbstractPhoneCall {
    * @throws IllegalArgumentException if the format is invalid or date time is null
    */
   private void checkDateTimeFormat(String dateTime, String errorMessage) {
-    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2}$";
+    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2} (AM|PM|am|pm)$";
     if (dateTime == null || !dateTime.matches(dateTimeRegex)) {
       throw new IllegalArgumentException(errorMessage);
     }
@@ -96,7 +106,9 @@ public class PhoneCall extends AbstractPhoneCall {
    */
   @Override
   public String getStartTimeString() {
-    return pStartTime;
+    int format = DateFormat.SHORT;
+    DateFormat dateFormat = DateFormat.getDateTimeInstance(format, format);
+    return dateFormat.format(pStartTime);
   }
 
 
@@ -106,6 +118,18 @@ public class PhoneCall extends AbstractPhoneCall {
    */
   @Override
   public String getEndTimeString() {
+    int format = DateFormat.SHORT;
+    DateFormat dateFormat = DateFormat.getDateTimeInstance(format, format);
+    return dateFormat.format(pEndTime);
+  }
+
+  @Override
+  public Date getStartTime () {
+    return pStartTime;
+  }
+
+  @Override
+  public Date getEndTime () {
     return pEndTime;
   }
 }

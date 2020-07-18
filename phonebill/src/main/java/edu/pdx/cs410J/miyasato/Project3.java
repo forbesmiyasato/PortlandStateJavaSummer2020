@@ -3,19 +3,18 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.Arrays;
 
 /**
  * The main class for the CS410J Phone Bill Project
  */
-public class Project2 {
+public class Project3 {
 
     /**
      * Prints the read me to standard output and terminates the application successfully
      */
     public static void printReadMeAndExit() {
-        InputStream readme = Project2.class.getResourceAsStream("README.txt");
+        InputStream readme = Project3.class.getResourceAsStream("README.txt");
         BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
         String line;
 
@@ -57,15 +56,21 @@ public class Project2 {
         String startTime;
         String endDate;
         String endTime;
+        String startAmPm;
+        String endAmPm;
 
         callerNumber = args[0];
         calleeNumber = args[1];
         startDate = args[2];
         startTime = args[3];
-        endDate = args[4];
-        endTime = args[5];
+        startAmPm = args[4];
+        endDate = args[5];
+        endTime = args[6];
+        endAmPm = args[7];
 
-        pc = new PhoneCall(callerNumber, calleeNumber, startDate + " " + startTime, endDate + " " + endTime);
+        pc = new PhoneCall(callerNumber, calleeNumber,
+                startDate + " " + startTime + " " + startAmPm,
+                endDate + " " + endTime + " " + endAmPm);
 
         return pc;
     }
@@ -90,6 +95,7 @@ public class Project2 {
         String textFile = null;
         int argumentLength = args.length;
         int startOfArguments = 0;
+        int validArguments = 9;
 
         if (argumentLength == 0) {
             printErrorMessageAndExit("Missing command line arguments");
@@ -117,9 +123,9 @@ public class Project2 {
             }
         }
 
-        if (argumentLength - startOfArguments < 7) {
+        if (argumentLength - startOfArguments < validArguments) {
             printErrorMessageAndExit("Missing command line arguments");
-        } else if (argumentLength - startOfArguments > 7) {
+        } else if (argumentLength - startOfArguments > validArguments) {
             printErrorMessageAndExit("Extraneous command line arguments");
         }
 
