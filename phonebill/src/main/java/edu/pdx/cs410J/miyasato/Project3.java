@@ -89,18 +89,18 @@ public class Project3 {
         PhoneBill phoneBill = null;
         TextParser textParser;
         TextDumper textDumper;
-        File file = null;
+        PrettyPrinter prettyPrinter;
+        File textFile = null;
+        File prettyFile = null;
         boolean print = false;
         boolean textOption = false;
         boolean prettyPrint = false;
-        String textFile = null;
-        String prettyFile = null;
+        String textFilename = null;
+        String prettyFilename = null;
         int argumentLength = args.length;
         int startOfArguments = 0;
         int validArguments = 9;
 
-        PhoneCall testPC = new PhoneCall("808-200-6188", "808-200-6188", "1/1/2020 9:39 am", "01/2/2020 1:03 pm");
-        System.out.println(testPC.getEndTimeString());
         if (argumentLength == 0) {
             printErrorMessageAndExit("Missing command line arguments");
         }
@@ -120,13 +120,13 @@ public class Project3 {
                 if (++startOfArguments >= argumentLength) {
                     printErrorMessageAndExit("Missing file name and command line arguments");
                 }
-                textFile = args[startOfArguments];
+                textFilename = args[startOfArguments];
             } else if (args[startOfArguments].equals("-pretty")) {
                 prettyPrint = true;
                 if (++startOfArguments >= argumentLength) {
                     printErrorMessageAndExit("Missing file name and command line arguments");
                 }
-                prettyFile = args[startOfArguments];
+                prettyFilename = args[startOfArguments];
             } else {
                 printErrorMessageAndExit("INVALID OPTION!");
             }
@@ -142,16 +142,14 @@ public class Project3 {
         startOfArguments++;
 
         if (textOption) {
-            file = new File(textFile);
-            if (file.exists()) {
+            textFile = new File(textFilename);
+            if (textFile.exists()) {
                 try {
-                    textParser = new TextParser(new FileReader(file), customerName);
+                    textParser = new TextParser(new FileReader(textFile), customerName);
                     phoneBill = textParser.parse();
                 } catch (FileNotFoundException | ParserException e) {
                     printErrorMessageAndExit(e.getMessage());
                 }
-            } else {
-                phoneBill = new PhoneBill(customerName);
             }
         }
 
@@ -161,15 +159,29 @@ public class Project3 {
             printErrorMessageAndExit(e.getMessage());
         }
 
-        if (prettyPrint) {
+        if (phoneBill == null) {
+            phoneBill = new PhoneBill(customerName);
+        }
 
+        phoneBill.addPhoneCall(phoneCall);
+
+        if (prettyPrint) {
+            prettyFile = new File(prettyFilename);
+            try {
+                if (prettyFilename.equals("-")) {
+                    prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
+                } else {
+                    prettyPrinter = new PrettyPrinter(new FileWriter(prettyFile));
+                }
+                prettyPrinter.dump(phoneBill);
+            } catch (IOException e) {
+                printErrorMessageAndExit(e.getMessage());
+            }
         }
 
         if (textOption) {
-            assert phoneBill != null;
-            phoneBill.addPhoneCall(phoneCall);
             try {
-                textDumper = new TextDumper(new FileWriter(file));
+                textDumper = new TextDumper(new FileWriter(textFile));
                 textDumper.dump(phoneBill);
             } catch (IOException e) {
                 printErrorMessageAndExit(e.getMessage());

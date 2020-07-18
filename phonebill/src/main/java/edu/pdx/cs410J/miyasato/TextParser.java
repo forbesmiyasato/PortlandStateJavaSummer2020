@@ -11,8 +11,8 @@ import java.util.StringTokenizer;
  * This class represents a TextParser, and implements PhoneBillParser
  */
 public class TextParser implements PhoneBillParser<PhoneBill> {
-    Reader reader;
-    String customerName;
+    private Reader reader;
+    private String customerName;
 
     /**
      * Initializes the TextParser
@@ -61,12 +61,14 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                     counter++;
                 }
                 counter = 0;
+                args[2] = args[2].trim().replace(",", "");
+                args[5] = args[5].trim().replace(",", "");
                 try {
                     PhoneCall phoneCall = new PhoneCall(args[0], args[1], args[2] + " " + args[3] + " " + args[4],
                             args[5] + " " + args[6] + " " + args[7]);
                     phoneBill.addPhoneCall(phoneCall);
                 } catch (IllegalArgumentException e) {
-                    throw new ParserException("Malformatted File! Invalid Phone Call Argument!");
+                    throw new ParserException("Malformatted File! " + e.getMessage());
                 }
             }
             reader.close();

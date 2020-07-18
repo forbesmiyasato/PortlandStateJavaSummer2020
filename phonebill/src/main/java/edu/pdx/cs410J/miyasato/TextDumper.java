@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public class TextDumper implements PhoneBillDumper<PhoneBill> {
 
-    Writer writer;
+    private Writer writer;
 
     /**
      * Initializes the TextDumper
