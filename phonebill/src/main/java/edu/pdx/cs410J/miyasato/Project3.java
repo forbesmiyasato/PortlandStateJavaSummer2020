@@ -90,13 +90,17 @@ public class Project3 {
         TextParser textParser;
         TextDumper textDumper;
         File file = null;
-        Boolean print = false;
-        Boolean textOption = false;
+        boolean print = false;
+        boolean textOption = false;
+        boolean prettyPrint = false;
         String textFile = null;
+        String prettyFile = null;
         int argumentLength = args.length;
         int startOfArguments = 0;
         int validArguments = 9;
 
+        PhoneCall testPC = new PhoneCall("808-200-6188", "808-200-6188", "1/1/2020 9:39 am", "01/2/2020 1:03 pm");
+        System.out.println(testPC.getEndTimeString());
         if (argumentLength == 0) {
             printErrorMessageAndExit("Missing command line arguments");
         }
@@ -107,10 +111,7 @@ public class Project3 {
                 break;
             }
 
-            if (args[startOfArguments].startsWith("-") && (!args[startOfArguments].equals("-README")
-                    && !args[startOfArguments].equals("-print") && !args[startOfArguments].equals("-textFile"))) {
-                printErrorMessageAndExit("INVALID OPTION!");
-            } else if (args[startOfArguments].equals("-README")) {
+            if (args[startOfArguments].equals("-README")) {
                 printReadMeAndExit();
             } else if (args[startOfArguments].equals("-print")) {
                 print = true;
@@ -120,6 +121,14 @@ public class Project3 {
                     printErrorMessageAndExit("Missing file name and command line arguments");
                 }
                 textFile = args[startOfArguments];
+            } else if (args[startOfArguments].equals("-pretty")) {
+                prettyPrint = true;
+                if (++startOfArguments >= argumentLength) {
+                    printErrorMessageAndExit("Missing file name and command line arguments");
+                }
+                prettyFile = args[startOfArguments];
+            } else {
+                printErrorMessageAndExit("INVALID OPTION!");
             }
         }
 
@@ -150,6 +159,10 @@ public class Project3 {
             phoneCall = createPhoneCallWithArguments(Arrays.copyOfRange(args, startOfArguments, argumentLength));
         } catch (IllegalArgumentException e) {
             printErrorMessageAndExit(e.getMessage());
+        }
+
+        if (prettyPrint) {
+
         }
 
         if (textOption) {

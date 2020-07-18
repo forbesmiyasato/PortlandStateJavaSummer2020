@@ -52,6 +52,10 @@ public class PhoneCall extends AbstractPhoneCall {
     } catch (ParseException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
+
+    if (pStartTime.after(pEndTime)) {
+      throw new IllegalArgumentException("Invalid times! Start Time is after End Time!");
+    }
   }
 
   /**
