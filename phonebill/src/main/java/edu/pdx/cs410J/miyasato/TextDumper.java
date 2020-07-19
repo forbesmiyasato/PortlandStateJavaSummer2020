@@ -3,6 +3,7 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.PhoneBillDumper;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 /**
@@ -38,14 +39,21 @@ public class TextDumper implements PhoneBillDumper<PhoneBill> {
 
         Collection<PhoneCall> phoneCalls = phoneBill.getPhoneCalls();
 
+        String startTime;
+        String endTime;
+        String pattern = "MM/dd/yyyy hh:mm aa";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
         for (PhoneCall phoneCall : phoneCalls) {
             writer.write(phoneCall.getCaller());
             writer.write(" ");
             writer.write(phoneCall.getCallee());
             writer.write(" ");
-            writer.write(phoneCall.getStartTimeString());
+            startTime = simpleDateFormat.format(phoneCall.getStartTime());
+            writer.write(startTime);
             writer.write(" ");
-            writer.write(phoneCall.getEndTimeString());
+            endTime = simpleDateFormat.format(phoneCall.getEndTime());
+            writer.write(endTime);
             writer.newLine();
         }
 

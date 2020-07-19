@@ -26,24 +26,27 @@ public class PrettyPrinter implements PhoneBillDumper<PhoneBill> {
         PrintWriter writer = new PrintWriter(bufferedWriter);
         String customerName = phoneBill.getCustomer();
 
+        Collection<PhoneCall> phoneCalls = phoneBill.getPhoneCalls();
+
         writer.write("Customer Name: " + customerName);
         writer.println();
+        writer.write("Phone Calls (" + phoneCalls.size() + "):");
+        writer.println();
 
-        Collection<PhoneCall> phoneCalls = phoneBill.getPhoneCalls();
         int format = DateFormat.MEDIUM;
         DateFormat dateFormat = DateFormat.getDateTimeInstance(format, format);
 
         if (phoneCalls.size() > 0) {
-            writer.printf("%-15s %-15s %-30s %-30s %-15s%n", "Caller", "Callee", "Start Time", "End Time",
-                    "Duration (minutes)");
+            writer.printf("                %-15s %-17s %-27s %-27s %s%n", "Caller", "Callee", "Start Time", "End Time",
+                    "Duration");
         }
         for (PhoneCall phoneCall : phoneCalls) {
             Date endTime = phoneCall.getEndTime();
             Date startTime = phoneCall.getStartTime();
             int duration = (int) TimeUnit.MILLISECONDS.toMinutes(endTime.getTime()
                     - startTime.getTime());
-            writer.printf("%-15s %-15s %-30s %-30s %-15s%n", phoneCall.getCaller(), phoneCall.getCallee(),
-                    startTime, endTime, duration);
+            writer.printf("Phone Call from %-12s to %-11s from %-24s to %-23s for %s minutes%n", phoneCall.getCaller(), phoneCall.getCallee(),
+                    dateFormat.format(startTime), dateFormat.format(endTime), duration);
         }
 
         writer.close();

@@ -12,8 +12,8 @@ public class PrettyPrinterTest {
 
     public final String testCaller = "808-200-6188";
     public final String testCallee = "808-200-6188";
-    public final String testStartTime = "1/1/2020 1:39 am";
-    public final String testEndTime = "01/2/2020 1:03 PM";
+    public final String testStartTime = "11/1/2020 1:39 am";
+    public final String testEndTime = "12/2/2020 1:03 PM";
 
     @Test
     public void testIfPrettyPrinterWorks() throws IOException {
@@ -26,9 +26,11 @@ public class PrettyPrinterTest {
         prettyPrinter.dump(phoneBill);
 
         assertThat(writer.toString().trim().replace("\r",""), containsString(
-                "Customer Name: Test\n" + "Caller          Callee          Start Time" +
-                        "                     End Time                       Duration (minutes)\n" +
-                "808-200-6188    808-200-6188    Wed Jan 01 01:39:00 PST 2020   Thu Jan 02 13:03:00 PST 2020   2124"));
+                "Customer Name: Test\n" + "Phone Calls (1):\n" +
+                        "                Caller          Callee            Start Time" +
+                        "                  End Time                    Duration\n" +
+                "Phone Call from 808-200-6188 to 808-200-6188 from Nov 1, 2020, 1:39:00 AM  to Dec 2, 2020, " +
+                        "1:03:00 PM for 45324 minutes"));
     }
 
     public PhoneCall createPhoneCall() {
