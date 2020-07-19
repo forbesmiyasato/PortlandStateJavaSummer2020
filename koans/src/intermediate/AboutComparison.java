@@ -76,7 +76,6 @@ public class AboutComparison {
         RaceHorse[] horses = {lindy, slowy, lightning};
 
         Arrays.sort(horses, new HorseAgeComparator());
-        System.out.println(horses[0].getClass());
         assertEquals(horses[0], lightning);
         Arrays.sort(horses, new HorseSpeedComparator());
         assertEquals(horses[0], slowy);
