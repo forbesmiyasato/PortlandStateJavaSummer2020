@@ -164,10 +164,17 @@ public class PhoneCallTest {
             "01/20/2020 01:109 am");
   }
 
-//  @Test(expected = IllegalArgumentException.class)
-//  public void checkPhoneNumberFormatThrowsExceptionWithInvalidFormat() {
-//    checkPhoneNumberFormat("808+200+6188");
-//  }
+  @Test
+  public void compareToReturnsCorrectValues() {
+    PhoneCall pc1 = new PhoneCall("718-200-6188", "808-200-2000", "01/11/2019 11:39 am", "01/11/2020 11:03 am");
+    PhoneCall pc2 = new PhoneCall("818-200-6188", "808-200-2000", "01/11/2019 11:39 am", "01/11/2020 11:03 am");
+    PhoneCall pc3 = new PhoneCall("818-200-6188", "808-200-2000", "01/11/2018 11:39 am", "01/11/2020 11:03 am");
+    PhoneCall pc4 = new PhoneCall("718-200-6188", "808-200-2000", "01/11/2019 11:39 am", "01/11/2020 11:03 am");
+
+    assertThat(pc1.compareTo(pc2), equalTo(-1));
+    assertThat(pc1.compareTo(pc3), equalTo(1));
+    assertThat(pc1.compareTo(pc4), equalTo(0));
+  }
 
   public PhoneCall createPhoneCall() {
     PhoneCall pc = new PhoneCall(testCaller, testCallee, testStartTime,
