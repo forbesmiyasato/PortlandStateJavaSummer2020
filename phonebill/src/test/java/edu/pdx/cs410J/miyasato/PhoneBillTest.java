@@ -64,7 +64,7 @@ public class PhoneBillTest {
         cPB.addPhoneCall(cPC);
         cPB.addPhoneCall(cPC2);
 
-        assertThat(cPB.toString(), containsString("2"));
+        assertThat(cPB.toString(), containsString("1"));
     }
 
     public PhoneCall createPhoneCall() {

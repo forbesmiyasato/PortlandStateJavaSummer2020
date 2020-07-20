@@ -4,13 +4,15 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * PhoneBill class extends AbstractPhoneBill, and serves as a container for PhoneCalls
  */
 public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
-    private ArrayList<PhoneCall> pPhoneCalls;
+    private SortedSet<PhoneCall> pPhoneCalls;
     private String pCustomerName;
 
     /**
@@ -20,7 +22,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
     public PhoneBill(String customerName) {
         super();
         pCustomerName = customerName;
-        pPhoneCalls = new ArrayList<PhoneCall>();
+        pPhoneCalls = new TreeSet<>();
     }
 
     /**

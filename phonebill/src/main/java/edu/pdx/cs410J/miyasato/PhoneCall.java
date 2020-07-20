@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * This class represents a PhoneCall, and extends AbstractPhoneCall
  */
-public class PhoneCall extends AbstractPhoneCall {
+public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall> {
 
   private final String pCaller;
   private final String pCallee;
@@ -135,5 +135,16 @@ public class PhoneCall extends AbstractPhoneCall {
   @Override
   public Date getEndTime () {
     return pEndTime;
+  }
+
+  @Override
+  public int compareTo(PhoneCall otherPhoneCall) {
+    if (this.getStartTime().after(otherPhoneCall.getStartTime())) {
+      return 1;
+    } else if (this.getStartTime().before(otherPhoneCall.getStartTime())) {
+      return -1;
+    } else {
+      return this.getCaller().compareTo(otherPhoneCall.getCaller());
+    }
   }
 }
