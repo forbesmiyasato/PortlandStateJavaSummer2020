@@ -23,6 +23,7 @@ or standard out (file -).
 The command line inputs must follow the interface above.
 
 ex:
-input: java -jar target/phonebill-Summer2020.jar -print Forbes 808-200-6188 808-200-2000 1/15/2020 19:39 01/2/2020 1:03
+input: java -jar target/phonebill-Summer2020.jar -print Forbes 808-200-6188 808-200-2000 1/1/2020 11:39 am \
+01/2/2020 1:03 pm
 
 output:  Phone call from 808-200-6188 to 808-200-2000 from 1/15/2020 19:39 to 01/2/2020 1:03

@@ -105,8 +105,7 @@ public class Project3 {
             printErrorMessageAndExit("Missing command line arguments");
         }
 
-        //only the first two arguments could be valid options
-        for (startOfArguments = 0; startOfArguments < (Math.min(4, argumentLength)); startOfArguments++) {
+        for (startOfArguments = 0; startOfArguments < (Math.min(6, argumentLength)); startOfArguments++) {
             if (!args[startOfArguments].startsWith("-")) {
                 break;
             }
