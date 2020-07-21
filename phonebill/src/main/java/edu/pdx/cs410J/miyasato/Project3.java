@@ -164,6 +164,11 @@ public class Project3 {
 
         phoneBill.addPhoneCall(phoneCall);
 
+        if (print) {
+            assert phoneCall != null;
+            System.out.println(phoneCall.toString());
+        }
+
         if (prettyPrint) {
             prettyFile = new File(prettyFilename);
             try {
@@ -185,11 +190,6 @@ public class Project3 {
             } catch (IOException e) {
                 printErrorMessageAndExit(e.getMessage());
             }
-        }
-
-        if (print) {
-            assert phoneCall != null;
-            System.out.println(phoneCall.toString());
         }
 
         System.exit(0);
