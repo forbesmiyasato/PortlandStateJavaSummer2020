@@ -1,23 +1,24 @@
 This is a README file!
 
-CS410J Project 2 : Storing Your Phone Bill in a Text File
+CS410J Project 3 : Pretty Printing A Phone Bill
 Forbes Miyasato
 
 The Phone Bill Application reads in a series of options and arguments with information regarding the phone bill and
-phone call, and parses the data in order to present the user with a description of the PhoneCall.
+phone call, and parses the data in order to present the user with a description of the PhoneCall and store PhoneBills.
 
-usage: java edu.pdx.cs410J.<login-id>.Project2 [options] <args>
+usage: java edu.pdx.cs410J.<login-id>.Project3 [options] <args>
 args are (in this order):
 customer Person whose phone bill we’re modeling
 callerNumber Phone number of caller
 calleeNumber Phone number of person who was called
-start Date and time call began (24-hour time)
-end Date and time call ended (24-hour time)
+start Date and time (am/pm) call began
+end Date and time (am/pm) call ended
 options are (options may appear in any order):
+-pretty file Pretty print the phone bill to a text file
+or standard out (file -).
 -textFile file Where to read/write the phone bill
 -print Prints a description of the new phone call
--README Prints a README for this project and exits
-Dates and times should be in the format: mm/dd/yyyy hh:mm
+-README
 
 The command line inputs must follow the interface above.
 
