@@ -65,7 +65,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
    * @throws IllegalArgumentException if the format is invalid or date time is null
    */
   private void checkDateTimeFormat(String dateTime, String errorMessage) {
-    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2} (AM|PM|am|pm)$";
+    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2} (AM|PM|am|pm|aM|Am|pM|Pm)$";
     if (dateTime == null || !dateTime.matches(dateTimeRegex)) {
       throw new IllegalArgumentException(errorMessage);
     }
