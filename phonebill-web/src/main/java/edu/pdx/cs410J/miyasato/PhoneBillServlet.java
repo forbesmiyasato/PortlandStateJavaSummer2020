@@ -21,7 +21,7 @@ public class PhoneBillServlet extends HttpServlet
 {
     static final String WORD_PARAMETER = "word";
     static final String DEFINITION_PARAMETER = "definition";
-
+    static final String CUSTOMER_PARAMETER = "Customer";
     private final Map<String, String> dictionary = new HashMap<>();
 
     /**
@@ -35,10 +35,9 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter( WORD_PARAMETER, request );
+        String word = getParameter(CUSTOMER_PARAMETER, request );
         if (word != null) {
-            writeDefinition(word, response);
-
+            missingRequiredParameter(response, CUSTOMER_PARAMETER);
         } else {
             writeAllDictionaryEntries(response);
         }
