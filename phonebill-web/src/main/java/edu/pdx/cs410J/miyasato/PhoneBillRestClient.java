@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
 import static java.net.HttpURLConnection.HTTP_OK;
-
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAMETER;
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CUSTOMER_PARAMETER;
 
 /**
  * A helper class for accessing the rest client.  Note that this class provides
@@ -48,8 +46,9 @@ public class PhoneBillRestClient extends HttpRequestHelper
       return parser.parse();
     }
 
-    public void addPhoneCall(String customer, String caller) throws IOException {
-      Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, customer, CALLER_NUMBER_PARAMETER, caller));
+    public void addPhoneCall(String customer, String caller, String callee, String startTime, String endTime) throws IOException {
+      Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, customer, CALLER_NUMBER_PARAMETER, caller,
+              CALLEE_NUMBER_PARAMETER, callee, START_TIME_PARAMETER, startTime, END_TIME_PARAMETER, endTime));
       throwExceptionIfNotOkayHttpStatus(response);
     }
 

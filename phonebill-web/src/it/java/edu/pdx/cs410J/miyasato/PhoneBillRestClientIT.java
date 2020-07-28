@@ -52,12 +52,26 @@ public class PhoneBillRestClientIT {
     PhoneBillRestClient client = newPhoneBillRestClient();
     String customer = "TEST CUSTOMER";
 
-    client.addPhoneCall(customer, testCaller);
+    client.addPhoneCall(customer, testCaller, testCallee, testStartTime, testEndTime);
 
     PhoneBill phoneBill = client.getPhoneBill(customer);
     assertThat(phoneBill.getCustomer(), equalTo(customer));
 
     PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
     assertThat(phoneCall.getCaller(), equalTo(testCaller));
+  }
+
+  @Test
+  public void test3AddPhoneCallToExistingPhoneBill() throws IOException, ParserException {
+    PhoneBillRestClient client = newPhoneBillRestClient();
+    String customer = "TEST CUSTOMER";
+    String newCallerNumber = "123-456-7890";
+    client.addPhoneCall(customer, newCallerNumber, testCallee, testStartTime, testEndTime);
+
+    PhoneBill phoneBill = client.getPhoneBill(customer);
+    assertThat(phoneBill.getCustomer(), equalTo(customer));
+
+    PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
+    assertThat(phoneCall.getCaller(), equalTo(newCallerNumber));
   }
 }

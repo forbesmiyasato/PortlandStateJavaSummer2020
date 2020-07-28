@@ -11,8 +11,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CUSTOMER_PARAMETER;
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAMETER;
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
 
 /**
  * This servlet ultimately provides a REST API for working with an
@@ -59,21 +58,24 @@ public class PhoneBillServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
 
-        String customer = getParameter(CUSTOMER_PARAMETER, request);
-        if (customer == null) {
-            missingRequiredParameter(response, CUSTOMER_PARAMETER);
-            return;
+        String customer = getParameterThatHandlesNull(CUSTOMER_PARAMETER, request, response);
+
+        String caller = getParameterThatHandlesNull(CALLER_NUMBER_PARAMETER, request, response);
+
+        String callee = getParameterThatHandlesNull(CALLEE_NUMBER_PARAMETER, request, response);
+
+        String startTime = getParameterThatHandlesNull(START_TIME_PARAMETER, request, response);
+
+        String endTime = getParameterThatHandlesNull(END_TIME_PARAMETER, request, response);
+
+        PhoneBill phoneBill = phoneBills.get(customer);
+        if (phoneBill == null) {
+            phoneBill = new PhoneBill(customer);
         }
 
-        String definition = getParameter(CALLER_NUMBER_PARAMETER, request);
-        if (definition == null) {
-            missingRequiredParameter(response, CALLER_NUMBER_PARAMETER);
-            return;
-        }
-
-        PhoneBill bill = new PhoneBill(customer);
-        bill.addPhoneCall(new PhoneCall("808-200-6188", "808-200-6188", "1/1/2020 3:56 pm", "1/2/2020 1:11 am"));
-        this.phoneBills.put(customer, bill);
+        PhoneCall phoneCall = new PhoneCall(caller, callee, startTime, endTime);
+        phoneBill.addPhoneCall(phoneCall);
+        this.phoneBills.put(customer, phoneBill);
 
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -124,6 +126,13 @@ public class PhoneBillServlet extends HttpServlet {
         }
     }
 
+    private String getParameterThatHandlesNull(String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String value = getParameter(name, request);
+        if (value == null) {
+            missingRequiredParameter(response, name);
+        }
+        return value;
+    }
     @VisibleForTesting
     PhoneBill getPhoneBill(String customer) {
         return this.phoneBills.get(customer);

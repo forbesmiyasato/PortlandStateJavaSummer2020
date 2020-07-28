@@ -56,7 +56,7 @@ public class Project4 {
         PhoneBillRestClient client = new PhoneBillRestClient(hostName, port);
 
         String message;
-        try {
+//        try {
             if (word == null) {
                 message = "fix me";
             } else if (definition == null) {
@@ -64,14 +64,14 @@ public class Project4 {
                 message = "fix me";
             } else {
                 // Post the word/definition pair
-                client.addPhoneCall(word, definition);
+//                client.addPhoneCall(word, definition);
                 message = Messages.definedWordAs(word, definition);
             }
 
-        } catch ( IOException ex ) {
-            error("While contacting server: " + ex);
-            return;
-        }
+//        } catch ( IOException ex ) {
+//            error("While contacting server: " + ex);
+//            return;
+//        }
 
         System.out.println(message);
 
