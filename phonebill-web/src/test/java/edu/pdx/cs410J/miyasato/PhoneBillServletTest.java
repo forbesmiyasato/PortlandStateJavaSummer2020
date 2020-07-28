@@ -24,11 +24,6 @@ import static org.mockito.Mockito.*;
 public class PhoneBillServletTest {
 
   @Test
-  public void test() {
-    assertThat(0, equalTo(0));
-  }
-
-  @Test
   public void requestWithNoCustomerReturnMissingParameter() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
 
