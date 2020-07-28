@@ -61,11 +61,10 @@ public class Project4 {
                 message = "fix me";
             } else if (definition == null) {
                 // Print all dictionary entries
-                message = Messages.formatDictionaryEntry(word, client.getPhoneBill(word));
-
+                message = "fix me";
             } else {
                 // Post the word/definition pair
-                client.addDictionaryEntry(word, definition);
+                client.addPhoneCall(word, definition);
                 message = Messages.definedWordAs(word, definition);
             }
 

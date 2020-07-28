@@ -1,9 +1,12 @@
 package edu.pdx.cs410J.miyasato;
 
 import com.google.common.annotations.VisibleForTesting;
+import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Map;
 
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -37,15 +40,16 @@ public class PhoneBillRestClient extends HttpRequestHelper
     /**
      * Returns the definition for the given word
      */
-    public String getPhoneBill(String customer) throws IOException {
+    public PhoneBill getPhoneBill(String customer) throws IOException, ParserException {
       Response response = get(this.url, Map.of(CUSTOMER_PARAMETER, customer));
       throwExceptionIfNotOkayHttpStatus(response);
       String content = response.getContent();
-      return Messages.parseDictionaryEntry(content).getValue();
+      TextParser parser = new TextParser(new StringReader(content), customer);
+      return parser.parse();
     }
 
-    public void addDictionaryEntry(String word, String definition) throws IOException {
-      Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, word, CALLER_NUMBER_PARAMETER, definition));
+    public void addPhoneCall(String customer, String caller) throws IOException {
+      Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, customer, CALLER_NUMBER_PARAMETER, caller));
       throwExceptionIfNotOkayHttpStatus(response);
     }
 

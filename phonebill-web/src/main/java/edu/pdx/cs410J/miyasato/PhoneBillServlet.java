@@ -20,9 +20,8 @@ import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAM
  * of how to use HTTP and Java servlets to store simple dictionary of words
  * and their definitions.
  */
-public class PhoneBillServlet extends HttpServlet
-{
-    private final Map<String, PhoneBill> phoneCalls = new HashMap<>();
+public class PhoneBillServlet extends HttpServlet {
+    private final Map<String, PhoneBill> phoneBills = new HashMap<>();
 
     /**
      * Handles an HTTP GET request from a client by writing the definition of the
@@ -31,15 +30,23 @@ public class PhoneBillServlet extends HttpServlet
      * are written to the HTTP response.
      */
     @Override
-    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
-    {
-        response.setContentType( "text/plain" );
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/plain");
 
         String customer = getParameter(CUSTOMER_PARAMETER, request);
         if (customer == null) {
             missingRequiredParameter(response, CUSTOMER_PARAMETER);
-        } else {
+            return;
+        }
+
+        PhoneBill phoneBill = getPhoneBill(customer);
+        if (phoneBill == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(customer));
+        }
+        else {
+            TextDumper textDumper = new TextDumper(response.getWriter());
+            textDumper.dump(phoneBill);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -49,27 +56,26 @@ public class PhoneBillServlet extends HttpServlet
      * entry to the HTTP response.
      */
     @Override
-    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
-    {
-        response.setContentType( "text/plain" );
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/plain");
 
-        String customer = getParameter(CUSTOMER_PARAMETER, request );
+        String customer = getParameter(CUSTOMER_PARAMETER, request);
         if (customer == null) {
             missingRequiredParameter(response, CUSTOMER_PARAMETER);
             return;
         }
 
-        String definition = getParameter(CALLER_NUMBER_PARAMETER, request );
-        if ( definition == null) {
-            missingRequiredParameter( response, CALLER_NUMBER_PARAMETER );
+        String definition = getParameter(CALLER_NUMBER_PARAMETER, request);
+        if (definition == null) {
+            missingRequiredParameter(response, CALLER_NUMBER_PARAMETER);
             return;
         }
 
         PhoneBill bill = new PhoneBill(customer);
         bill.addPhoneCall(new PhoneCall("808-200-6188", "808-200-6188", "1/1/2020 3:56 pm", "1/2/2020 1:11 am"));
-        this.phoneCalls.put(customer, bill);
+        this.phoneBills.put(customer, bill);
 
-        response.setStatus( HttpServletResponse.SC_OK);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /**
@@ -81,7 +87,7 @@ public class PhoneBillServlet extends HttpServlet
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
 
-        this.phoneCalls.clear();
+        this.phoneBills.clear();
 
         PrintWriter pw = response.getWriter();
         pw.println(Messages.allDictionaryEntriesDeleted());
@@ -93,12 +99,11 @@ public class PhoneBillServlet extends HttpServlet
 
     /**
      * Writes an error message about a missing parameter to the HTTP response.
-     *
+     * <p>
      * The text of the error message is created by {@link Messages#missingRequiredParameter(String)}
      */
-    private void missingRequiredParameter( HttpServletResponse response, String parameterName )
-        throws IOException
-    {
+    private void missingRequiredParameter(HttpServletResponse response, String parameterName)
+            throws IOException {
         String message = Messages.missingRequiredParameter(parameterName);
         response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, message);
     }
@@ -107,20 +112,25 @@ public class PhoneBillServlet extends HttpServlet
      * Returns the value of the HTTP request parameter with the given name.
      *
      * @return <code>null</code> if the value of the parameter is
-     *         <code>null</code> or is the empty string
+     * <code>null</code> or is the empty string
      */
     private String getParameter(String name, HttpServletRequest request) {
-      String value = request.getParameter(name);
-      if (value == null || "".equals(value)) {
-        return null;
+        String value = request.getParameter(name);
+        if (value == null || "".equals(value)) {
+            return null;
 
-      } else {
-        return value;
-      }
+        } else {
+            return value;
+        }
     }
 
     @VisibleForTesting
-    public PhoneBill getPhoneBill(String customer) {
-        return this.phoneCalls.get(customer);
+    PhoneBill getPhoneBill(String customer) {
+        return this.phoneBills.get(customer);
+    }
+
+    @VisibleForTesting
+    void addPhoneBill(PhoneBill bill) {
+        this.phoneBills.put(bill.getCustomer(), bill);
     }
 }
