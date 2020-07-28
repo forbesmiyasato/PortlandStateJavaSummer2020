@@ -8,6 +8,9 @@ import java.util.Map;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAMETER;
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CUSTOMER_PARAMETER;
+
 /**
  * A helper class for accessing the rest client.  Note that this class provides
  * an example of how to make gets and posts to a URL.  You'll need to change it
@@ -50,7 +53,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
     public void addDictionaryEntry(String word, String definition) throws IOException {
-      Response response = postToMyURL(Map.of("word", word, "definition", definition));
+      Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, word, CALLER_NUMBER_PARAMETER, definition));
       throwExceptionIfNotOkayHttpStatus(response);
     }
 

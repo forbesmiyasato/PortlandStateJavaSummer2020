@@ -158,7 +158,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathLayoutType>repository</classpathLayoutType>
-              <classpathPrefix>${user.home}/.m2/repository</classpathPrefix>
+              <classpathPrefix>file:///${user.home}/.m2/repository</classpathPrefix>
               <mainClass>edu.pdx.cs410J.miyasato.Project4</mainClass>
             </manifest>
           </archive>

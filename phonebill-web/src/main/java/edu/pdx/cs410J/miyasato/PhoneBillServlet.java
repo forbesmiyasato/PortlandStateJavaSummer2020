@@ -11,6 +11,9 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CUSTOMER_PARAMETER;
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAMETER;
+
 /**
  * This servlet ultimately provides a REST API for working with an
  * <code>PhoneBill</code>.  However, in its current state, it is an example
@@ -19,9 +22,6 @@ import java.util.Map;
  */
 public class PhoneBillServlet extends HttpServlet
 {
-    static final String WORD_PARAMETER = "word";
-    static final String DEFINITION_PARAMETER = "definition";
-    static final String CUSTOMER_PARAMETER = "Customer";
     private final Map<String, String> dictionary = new HashMap<>();
 
     /**
@@ -35,9 +35,9 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter(CUSTOMER_PARAMETER, request );
+        String word = getParameter(CUSTOMER_PARAMETER, request);
         if (word != null) {
-            missingRequiredParameter(response, CUSTOMER_PARAMETER);
+            writeDefinition(word, response);
         } else {
             writeAllDictionaryEntries(response);
         }
@@ -53,15 +53,15 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter(WORD_PARAMETER, request );
+        String word = getParameter(CUSTOMER_PARAMETER, request );
         if (word == null) {
-            missingRequiredParameter(response, WORD_PARAMETER);
+            missingRequiredParameter(response, CUSTOMER_PARAMETER);
             return;
         }
 
-        String definition = getParameter(DEFINITION_PARAMETER, request );
+        String definition = getParameter(CALLER_NUMBER_PARAMETER, request );
         if ( definition == null) {
-            missingRequiredParameter( response, DEFINITION_PARAMETER );
+            missingRequiredParameter( response, CALLER_NUMBER_PARAMETER );
             return;
         }
 
