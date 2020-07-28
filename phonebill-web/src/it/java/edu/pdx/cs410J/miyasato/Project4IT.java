@@ -29,14 +29,56 @@ public class Project4IT extends InvokeMainTestCase {
     public void test1NoCommandLineArguments() {
         MainMethodResult result = invokeMain( Project4.class );
         assertThat(result.getExitCode(), equalTo(1));
-        assertThat(result.getTextWrittenToStandardError(), containsString(Project4.MISSING_ARGS));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing Command Line Arguments"));
     }
 
     @Test
-    public void test2EmptyServer() {
-        MainMethodResult result = invokeMain( Project4.class, HOSTNAME, PORT );
-        assertThat(result.getTextWrittenToStandardError(), result.getExitCode(), equalTo(0));
-        String out = result.getTextWrittenToStandardOut();
-        assertThat(out, out, containsString("fix me"));
+    public void test2NoHost() {
+        MainMethodResult result = invokeMain( Project4.class, "-port", "8080", "-search");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing host"));
+    }
+
+    @Test
+    public void test3NoPort() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "Customer");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing port"));
+    }
+
+    @Test
+    public void test4NoArguments() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT);
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing Command Line Arguments"));
+    }
+
+    @Test
+    public void test5OneArgument() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "Customer");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Got an HTTP Status Code of 404"));
+    }
+
+    @Test
+    public void test6TwoArguments() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "Customer", "Invalid");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Invalid behavior"));
+    }
+
+    @Test
+    public void test7PrintNoArgs() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-print", "Invalid");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Invalid behavior"));
+    }
+
+    @Test
+    public void test8PrintWithValidArgs() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-print",
+                "customer", "808-200-6188", "200-200-2000", "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm");
+        assertThat(result.getExitCode(), equalTo(0));
+        assertThat(result.getTextWrittenToStandardOut(), containsString("Phone call from"));
     }
 }

@@ -1,9 +1,12 @@
 package edu.pdx.cs410J.miyasato;
 
+import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.text.ParseException;
 
 /**
  * The main class that parses the command line and communicates with the
@@ -11,70 +14,136 @@ import java.io.PrintStream;
  */
 public class Project4 {
 
-    public static final String MISSING_ARGS = "Missing command line arguments";
-
     public static void main(String... args) {
         String hostName = null;
         String portString = null;
-        String word = null;
-        String definition = null;
+        int startOfArguments;
+        int argumentLength = args.length;
+        boolean print = false;
+        boolean search = false;
+        final int maxOptionArgs = 7;
+        int port = 0;
+        final int phoneCallArgsLength = 8;
+        PhoneBill phoneBill;
+        PhoneCall phoneCall = null;
+        String customer = null;
+        String callerNumber;
+        String calleeNumber;
+        String startDate;
+        String startTime;
+        String endDate;
+        String endTime;
+        String startAmPm;
+        String endAmPm;
 
-        for (String arg : args) {
-            if (hostName == null) {
-                hostName = arg;
+        if (argumentLength == 0) {
+            printErrorMessageAndExit("Missing Command Line Arguments");
+        }
+        for (startOfArguments = 0; startOfArguments < (Math.min(maxOptionArgs, argumentLength)); startOfArguments++) {
+            if (!args[startOfArguments].startsWith("-")) {
+                break;
+            }
 
-            } else if ( portString == null) {
-                portString = arg;
-
-            } else if (word == null) {
-                word = arg;
-
-            } else if (definition == null) {
-                definition = arg;
-
+            if (args[startOfArguments].equals("-README")) {
+                printReadMeAndExit();
+            } else if (args[startOfArguments].equals("-print")) {
+                print = true;
+            } else if (args[startOfArguments].equals("-search")) {
+                search = true;
+            } else if (args[startOfArguments].equals("-port")) {
+                if (++startOfArguments >= argumentLength) {
+                    printErrorMessageAndExit("Missing Port number");
+                }
+                portString = args[startOfArguments];
+                try {
+                    port = Integer.parseInt( portString );
+                } catch (NumberFormatException ex) {
+                    printErrorMessageAndExit("Port \"" + portString + "\" must be an integer");
+                    return;
+                }
+            } else if (args[startOfArguments].equals("-host")) {
+                if (++startOfArguments >= argumentLength) {
+                    printErrorMessageAndExit("Missing host name");
+                }
+                hostName = args[startOfArguments];
             } else {
-                usage("Extraneous command line argument: " + arg);
+                printErrorMessageAndExit("INVALID OPTION!");
             }
         }
 
         if (hostName == null) {
-            usage( MISSING_ARGS );
-
+            printErrorMessageAndExit("Missing host");
         } else if ( portString == null) {
-            usage( "Missing port" );
+            printErrorMessageAndExit("Missing port");
+        } else if (argumentLength - startOfArguments == 0) {
+            printErrorMessageAndExit("Missing Command Line Arguments");
         }
 
-        int port;
-        try {
-            port = Integer.parseInt( portString );
-            
-        } catch (NumberFormatException ex) {
-            usage("Port \"" + portString + "\" must be an integer");
-            return;
-        }
+        customer = args[startOfArguments++];
 
         PhoneBillRestClient client = new PhoneBillRestClient(hostName, port);
 
-        String message;
-//        try {
-            if (word == null) {
-                message = "fix me";
-            } else if (definition == null) {
-                // Print all dictionary entries
-                message = "fix me";
+        try {
+            if (search) {
+                final int searchArgs = 7;
+                if (argumentLength - startOfArguments < searchArgs) {
+                    printErrorMessageAndExit("Missing command line arguments for search");
+                } else if (argumentLength - startOfArguments > searchArgs) {
+                    printErrorMessageAndExit("Extraneous command line arguments for search");
+                }
+            } else if (argumentLength == 5) {
+                try {
+                    phoneBill = client.getPhoneBill(customer);
+                    PrettyPrinter prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
+                    prettyPrinter.dump(phoneBill);
+                } catch (IOException | ParserException e) {
+                    printErrorMessageAndExit(e.getMessage());
+                }
+            } else if (argumentLength - startOfArguments == phoneCallArgsLength) {
+                callerNumber = args[startOfArguments++];
+                calleeNumber = args[startOfArguments++];
+                startDate = args[startOfArguments++];
+                startTime = args[startOfArguments++];
+                startAmPm = args[startOfArguments++];
+                endDate = args[startOfArguments++];
+                endTime = args[startOfArguments++];
+                endAmPm = args[startOfArguments++];
+                String startTimeString = startDate + " " + startTime + " " + startAmPm;
+                String endTimeString = endDate + " " + endTime + " " + endAmPm;
+                try {
+                    client.addPhoneCall(customer, callerNumber, calleeNumber, startTimeString, endTimeString);
+                } catch (IOException e) {
+                    printErrorMessageAndExit(e.getMessage());
+                }
+                if (print) {
+                    try {
+                        phoneCall = new PhoneCall(callerNumber, calleeNumber, startTimeString, endTimeString);
+                    } catch (IllegalArgumentException e) {
+                        printErrorMessageAndExit(e.getMessage());
+                    }
+                }
             } else {
-                // Post the word/definition pair
-//                client.addPhoneCall(word, definition);
-                message = Messages.definedWordAs(word, definition);
+                printErrorMessageAndExit("Invalid behavior");
             }
+        } catch (PhoneBillRestClient.PhoneBillRestException e) {
+            printErrorMessageAndExit(e.getMessage());
+        }
 
-//        } catch ( IOException ex ) {
-//            error("While contacting server: " + ex);
-//            return;
-//        }
+        if (print) {
+            assert phoneCall != null;
+            System.out.println(phoneCall.toString());
+        }
 
-        System.out.println(message);
+        System.exit(0);
+    }
 
+    private static void printErrorMessageAndExit(String message) {
+        System.err.println(message);
+        System.exit(1);
+    }
+
+    private static void printReadMeAndExit() {
+        System.out.println("README!");
         System.exit(0);
     }
 
@@ -95,31 +164,6 @@ public class Project4 {
     {
         PrintStream err = System.err;
         err.println("** " + message);
-
-        System.exit(1);
-    }
-
-    /**
-     * Prints usage information for this program and exits
-     * @param message An error message to print
-     */
-    private static void usage( String message )
-    {
-        PrintStream err = System.err;
-        err.println("** " + message);
-        err.println();
-        err.println("usage: java Project4 host port [word] [definition]");
-        err.println("  host         Host of web server");
-        err.println("  port         Port of web server");
-        err.println("  word         Word in dictionary");
-        err.println("  definition   Definition of word");
-        err.println();
-        err.println("This simple program posts words and their definitions");
-        err.println("to the server.");
-        err.println("If no definition is specified, then the word's definition");
-        err.println("is printed.");
-        err.println("If no word is specified, all dictionary entries are printed");
-        err.println();
 
         System.exit(1);
     }

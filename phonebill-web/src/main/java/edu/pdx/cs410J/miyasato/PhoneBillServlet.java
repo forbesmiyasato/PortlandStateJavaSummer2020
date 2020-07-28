@@ -73,8 +73,13 @@ public class PhoneBillServlet extends HttpServlet {
             phoneBill = new PhoneBill(customer);
         }
 
-        PhoneCall phoneCall = new PhoneCall(caller, callee, startTime, endTime);
-        phoneBill.addPhoneCall(phoneCall);
+        try {
+            PhoneCall phoneCall = new PhoneCall(caller, callee, startTime, endTime);
+            phoneBill.addPhoneCall(phoneCall);
+        } catch (IllegalArgumentException e){
+            throw new ServletException(e.getMessage());
+        }
+
         this.phoneBills.put(customer, phoneBill);
 
         response.setStatus(HttpServletResponse.SC_OK);

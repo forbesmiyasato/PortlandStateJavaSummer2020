@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAMETER;
-import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CUSTOMER_PARAMETER;
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -62,11 +61,13 @@ public class PhoneBillServletTest {
     PhoneBillServlet servlet = new PhoneBillServlet();
 
     String customer = "TEST WORD";
-    String callerPhoneNumber = "808-200-6188";
 
     HttpServletRequest request = mock(HttpServletRequest.class);
     when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(customer);
-    when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(callerPhoneNumber);
+    when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+    when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+    when(request.getParameter(START_TIME_PARAMETER)).thenReturn(testStartTime);
+    when(request.getParameter(END_TIME_PARAMETER)).thenReturn(testEndTime);
 
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -84,7 +85,9 @@ public class PhoneBillServletTest {
     assertThat(phoneBill.getCustomer(), equalTo(customer));
 
     PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
-    assertThat(phoneCall.getCaller(), equalTo(callerPhoneNumber));
+    assertThat(phoneCall.getCaller(), equalTo(testCaller));
+    assertThat(phoneCall.getCallee(), equalTo(testCallee));
+
   }
 
   @Test
