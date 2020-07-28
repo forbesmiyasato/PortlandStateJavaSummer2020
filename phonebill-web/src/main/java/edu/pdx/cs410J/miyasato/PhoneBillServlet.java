@@ -22,7 +22,7 @@ import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.CALLER_NUMBER_PARAM
  */
 public class PhoneBillServlet extends HttpServlet
 {
-    private final Map<String, String> dictionary = new HashMap<>();
+    private final Map<String, PhoneBill> phoneCalls = new HashMap<>();
 
     /**
      * Handles an HTTP GET request from a client by writing the definition of the
@@ -53,8 +53,8 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter(CUSTOMER_PARAMETER, request );
-        if (word == null) {
+        String customer = getParameter(CUSTOMER_PARAMETER, request );
+        if (customer == null) {
             missingRequiredParameter(response, CUSTOMER_PARAMETER);
             return;
         }
@@ -65,11 +65,9 @@ public class PhoneBillServlet extends HttpServlet
             return;
         }
 
-        this.dictionary.put(word, definition);
-
-        PrintWriter pw = response.getWriter();
-        pw.println(Messages.definedWordAs(word, definition));
-        pw.flush();
+        PhoneBill bill = new PhoneBill(customer);
+        bill.addPhoneCall(new PhoneCall("808-200-6188", "808-200-6188", "1/1/2020 3:56 pm", "1/2/2020 1:11 am"));
+        this.phoneCalls.put(customer, bill);
 
         response.setStatus( HttpServletResponse.SC_OK);
     }
@@ -83,7 +81,7 @@ public class PhoneBillServlet extends HttpServlet
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
 
-        this.dictionary.clear();
+        this.phoneCalls.clear();
 
         PrintWriter pw = response.getWriter();
         pw.println(Messages.allDictionaryEntriesDeleted());
@@ -122,8 +120,7 @@ public class PhoneBillServlet extends HttpServlet
     }
 
     @VisibleForTesting
-    String getDefinition(String word) {
-        return this.dictionary.get(word);
+    public PhoneBill getPhoneBill(String customer) {
+        return this.phoneCalls.get(customer);
     }
-
 }

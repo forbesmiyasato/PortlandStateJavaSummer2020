@@ -4,6 +4,6 @@ public interface PhoneBillURLParameters {
 
     static final String CUSTOMER_PARAMETER = "customer";
 
-    static final String CALLER_NUMBER_PARAMETER = "definition";
+    static final String CALLER_NUMBER_PARAMETER = "callerNumber";
 
 }
