@@ -30,11 +30,11 @@ public class PhoneBillRestClientIT {
     return new PhoneBillRestClient(HOSTNAME, port);
   }
 
-  @Test
-  public void test0RemoveAllPhoneBills() throws IOException {
-    PhoneBillRestClient client = newPhoneBillRestClient();
-    client.removeAllPhoneBills();
-  }
+//  @Test
+//  public void test0RemoveAllPhoneBills() throws IOException {
+//    PhoneBillRestClient client = newPhoneBillRestClient();
+//    client.removeAllPhoneBills();
+//  }
 
   @Test
   public void test1NoneExistentPhoneBillThrowsException() throws IOException, ParserException {

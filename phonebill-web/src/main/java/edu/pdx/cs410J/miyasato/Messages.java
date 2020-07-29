@@ -27,14 +27,14 @@ public class Messages
         return String.format("The required parameter \"%s\" is missing", parameterName);
     }
 
-    public static String definedWordAs(String word, String definition )
-    {
-        return String.format( "Defined %s as %s", word, definition );
-    }
-
-    public static String allDictionaryEntriesDeleted() {
-        return "All dictionary entries have been deleted";
-    }
+//    public static String definedWordAs(String word, String definition )
+//    {
+//        return String.format( "Defined %s as %s", word, definition );
+//    }
+//
+//    public static String allDictionaryEntriesDeleted() {
+//        return "All dictionary entries have been deleted";
+//    }
 
     public static Map.Entry<String, String> parseDictionaryEntry(String content) {
         Pattern pattern = Pattern.compile("\\s*(.*) : (.*)");
@@ -89,5 +89,29 @@ public class Messages
 
     public static String noPhoneBillForCustomer(String customerName) {
         return String.format("No phone bill for customer %s", customerName);
+    }
+
+    public static String wrongFormatForCallerPhoneNumber() {
+        return String.format("Wrong format for Caller's phone number!");
+    }
+
+    public static String wrongFormatForCalleePhoneNumber() {
+        return "Wrong format for Callee's phone number!";
+    }
+
+    public static String wrongFormatForStartTime() {
+        return "Wrong format for start time!";
+    }
+
+    public static String wrongFormatForEndTime() {
+        return "Wrong format for end time!";
+    }
+
+    public static String startTimeAfterEndTimeError() {
+        return "Invalid times! Start Time is after End Time!";
+    }
+
+    public static String unParsableDate(String dataTime) {
+        return String.format("Unparseable date: \"%s\"", dataTime);
     }
 }

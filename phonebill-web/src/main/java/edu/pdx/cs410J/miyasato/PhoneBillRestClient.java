@@ -65,10 +65,10 @@ public class PhoneBillRestClient extends HttpRequestHelper
       return post(this.url, dictionaryEntries);
     }
 
-    public void removeAllPhoneBills() throws IOException {
-      Response response = delete(this.url, Map.of());
-      throwExceptionIfNotOkayHttpStatus(response);
-    }
+//    public void removeAllPhoneBills() throws IOException {
+//      Response response = delete(this.url, Map.of());
+//      throwExceptionIfNotOkayHttpStatus(response);
+//    }
 
     private Response throwExceptionIfNotOkayHttpStatus(Response response) {
       int code = response.getCode();

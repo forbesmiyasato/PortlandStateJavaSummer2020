@@ -19,11 +19,11 @@ public class Project4IT extends InvokeMainTestCase {
     private static final String HOSTNAME = "localhost";
     private static final String PORT = System.getProperty("http.port", "8080");
 
-    @Test
-    public void test0RemoveAllMappings() throws IOException {
-      PhoneBillRestClient client = new PhoneBillRestClient(HOSTNAME, Integer.parseInt(PORT));
-      client.removeAllPhoneBills();
-    }
+//    @Test
+//    public void test0RemoveAllMappings() throws IOException {
+//      PhoneBillRestClient client = new PhoneBillRestClient(HOSTNAME, Integer.parseInt(PORT));
+//      client.removeAllPhoneBills();
+//    }
 
     @Test
     public void test1NoCommandLineArguments() {

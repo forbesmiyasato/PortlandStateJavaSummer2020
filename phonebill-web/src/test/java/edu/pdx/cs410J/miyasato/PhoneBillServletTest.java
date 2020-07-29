@@ -24,92 +24,274 @@ import static org.mockito.Mockito.*;
  */
 public class PhoneBillServletTest {
 
-  public final String testCaller = "808-200-6188";
-  public final String testCallee = "808-200-6188";
-  public final String testStartTime = "1/1/2020 9:39 am";
-  public final String testEndTime = "01/2/2020 1:03 pm";
-  public final String testCustomer = "TEST CUSTOMER";
-  @Test
-  public void requestWithNoCustomerReturnMissingParameter() throws ServletException, IOException {
-    PhoneBillServlet servlet = new PhoneBillServlet();
+    public final String testCaller = "808-200-6188";
+    public final String testCallee = "808-200-6188";
+    public final String testStartTime = "1/1/2020 9:39 am";
+    public final String testEndTime = "01/2/2020 1:03 pm";
+    public final String testCustomer = "TEST CUSTOMER";
 
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    HttpServletResponse response = mock(HttpServletResponse.class);
+    @Test
+    public void requestWithNoCustomerReturnMissingParameter() throws ServletException, IOException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
 
-    servlet.doGet(request, response);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
 
-    verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
-            Messages.missingRequiredParameter(CUSTOMER_PARAMETER));
-  }
+        servlet.doGet(request, response);
 
-  @Test
-  public void requestCustomerWithNoPhoneBillReturnsNotFound() throws ServletException, IOException {
-    PhoneBillServlet servlet = new PhoneBillServlet();
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                Messages.missingRequiredParameter(CUSTOMER_PARAMETER));
+    }
 
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
-    HttpServletResponse response = mock(HttpServletResponse.class);
+    @Test
+    public void requestCustomerWithNoPhoneBillReturnsNotFound() throws ServletException, IOException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
 
-    servlet.doGet(request, response);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        HttpServletResponse response = mock(HttpServletResponse.class);
 
-    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(testCustomer));
-  }
+        servlet.doGet(request, response);
 
-  @Test
-  public void addPhoneCallToBill() throws ServletException, IOException {
-    PhoneBillServlet servlet = new PhoneBillServlet();
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(testCustomer));
+    }
 
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
-    when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
-    when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
-    when(request.getParameter(START_TIME_PARAMETER)).thenReturn(testStartTime);
-    when(request.getParameter(END_TIME_PARAMETER)).thenReturn(testEndTime);
+    @Test
+    public void addPhoneCallToBill() throws ServletException, IOException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
 
-    HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn(testStartTime);
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn(testEndTime);
 
-    PrintWriter pw = mock(PrintWriter.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
 
-    when(response.getWriter()).thenReturn(pw);
+        PrintWriter pw = mock(PrintWriter.class);
 
-    servlet.doPost(request, response);
+        when(response.getWriter()).thenReturn(pw);
 
-    verify(pw, times(0)).println(Mockito.any(String.class));
-    verify(response).setStatus(HttpServletResponse.SC_OK);
+        servlet.doPost(request, response);
 
-    PhoneBill phoneBill = servlet.getPhoneBill(testCustomer);
-    assertThat(phoneBill, notNullValue());
-    assertThat(phoneBill.getCustomer(), equalTo(testCustomer));
+        verify(pw, times(0)).println(Mockito.any(String.class));
+        verify(response).setStatus(HttpServletResponse.SC_OK);
 
-    PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
-    assertThat(phoneCall.getCaller(), equalTo(testCaller));
-    assertThat(phoneCall.getCallee(), equalTo(testCallee));
+        PhoneBill phoneBill = servlet.getPhoneBill(testCustomer);
+        assertThat(phoneBill, notNullValue());
+        assertThat(phoneBill.getCustomer(), equalTo(testCustomer));
 
-  }
+        PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
+        assertThat(phoneCall.getCaller(), equalTo(testCaller));
+        assertThat(phoneCall.getCallee(), equalTo(testCallee));
+    }
 
-  @Test
-  public void requestingExistingPhoneBillDumpsItToPrintWriter() throws IOException, ServletException {
+    @Test
+    public void requestingExistingPhoneBillDumpsItToPrintWriter() throws IOException, ServletException {
 
-    PhoneBill phoneBill = new PhoneBill(testCustomer);
-    phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
 
-    PhoneBillServlet servlet = new PhoneBillServlet();
-    servlet.addPhoneBill(phoneBill);
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
 
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    when(response.getWriter()).thenReturn(pw);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        when(response.getWriter()).thenReturn(pw);
 
-    servlet.doGet(request, response);
+        servlet.doGet(request, response);
 
-    verify(response).setStatus(HttpServletResponse.SC_OK);
-    String textPhoneBill = sw.toString();
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        String textPhoneBill = sw.toString();
 
-    assertThat(textPhoneBill, containsString(testCustomer));
-    assertThat(textPhoneBill, containsString(testCaller));
-  }
+        assertThat(textPhoneBill, containsString(testCustomer));
+        assertThat(textPhoneBill, containsString(testCaller));
+    }
 
+    @Test
+    public void searchExistingStartTimeReturnsPhoneBill() throws IOException, ServletException {
+
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020 8:39 am");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/1/2020 10:39 am");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        when(response.getWriter()).thenReturn(pw);
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        String textPhoneBill = sw.toString();
+
+        assertThat(textPhoneBill, containsString(testCustomer));
+        assertThat(textPhoneBill, containsString(testCaller));
+    }
+
+    @Test
+    public void searchNonExistingStartTimeDoesNotReturnPhoneBill() throws IOException, ServletException {
+
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/1/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        when(response.getWriter()).thenReturn(pw);
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        String textPhoneBill = sw.toString();
+
+        assertThat(textPhoneBill, containsString(testCustomer));
+        assertThat(textPhoneBill, not(containsString(testCaller)));
+    }
+
+    @Test
+    public void requestWithWrongParameterReturnsNotFound() throws ServletException, IOException {
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn(testCustomer);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        when(response.getWriter()).thenReturn(pw);
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        String textPhoneBill = sw.toString();
+
+        assertThat(textPhoneBill, containsString(testCustomer));
+    }
+
+    @Test
+    public void addPhoneBillToServletWithStartTimeAfterEndTimeThrowsAppropriateError() throws IOException, ServletException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/2/2020 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/1/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED, Messages.startTimeAfterEndTimeError());
+    }
+
+    @Test
+    public void addPhoneBillToServletWithInvalidCallerThrowsAppropriateError() throws IOException, ServletException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn("808+200-61a7");
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/2/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED, Messages.wrongFormatForCallerPhoneNumber());
+    }
+
+    @Test
+    public void addPhoneBillToServletWithInvalidCalleeThrowsAppropriateError() throws IOException, ServletException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn("808+200-61a7");
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/2/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED, Messages.wrongFormatForCalleePhoneNumber());
+    }
+
+    @Test
+    public void addPhoneBillToServletWithInvalidStartTimeThrowsAppropriateError() throws IOException, ServletException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020/1 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/2/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED, Messages.wrongFormatForStartTime());
+    }
+
+    @Test
+    public void addPhoneBillToServletWithInvalidEndTimeThrowsAppropriateError() throws IOException, ServletException {
+        PhoneBillServlet servlet = new PhoneBillServlet();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
+        when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn("1/1/2020 1:39 pm");
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/ZZ/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED, Messages.wrongFormatForEndTime());
+    }
+
+    @Test
+    public void searchWithInvalidTimesThrowsError() throws IOException, ServletException {
+        String invalidDate = "1/XX/2020 1:39 pm";
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(START_TIME_PARAMETER)).thenReturn(invalidDate);
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/1/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        servlet.doGet(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                Messages.unParsableDate(invalidDate));
+    }
 }

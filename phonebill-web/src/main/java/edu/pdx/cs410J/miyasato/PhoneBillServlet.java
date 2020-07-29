@@ -60,7 +60,8 @@ public class PhoneBillServlet extends HttpServlet {
                 endTime = simpleDateFormat.parse(endTimeString);
             } catch (ParseException e) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
-                throw new ServletException(e.getMessage());
+                return;
+//                throw new ServletException(e.getMessage());
             }
             phoneBill = filterPhoneBill(phoneBill, startTime, endTime);
         }
@@ -99,7 +100,7 @@ public class PhoneBillServlet extends HttpServlet {
             phoneBill.addPhoneCall(phoneCall);
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
-            throw new ServletException(e.getMessage());
+//            throw new ServletException(e.getMessage());
         }
 
         this.phoneBills.put(customer, phoneBill);
@@ -107,24 +108,24 @@ public class PhoneBillServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    /**
-     * Handles an HTTP DELETE request by removing all dictionary entries.  This
-     * behavior is exposed for testing purposes only.  It's probably not
-     * something that you'd want a real application to expose.
-     */
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-
-        this.phoneBills.clear();
-
-        PrintWriter pw = response.getWriter();
-        pw.println(Messages.allDictionaryEntriesDeleted());
-        pw.flush();
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-    }
+//    /**
+//     * Handles an HTTP DELETE request by removing all dictionary entries.  This
+//     * behavior is exposed for testing purposes only.  It's probably not
+//     * something that you'd want a real application to expose.
+//     */
+//    @Override
+//    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        response.setContentType("text/plain");
+//
+//        this.phoneBills.clear();
+//
+//        PrintWriter pw = response.getWriter();
+//        pw.println(Messages.allDictionaryEntriesDeleted());
+//        pw.flush();
+//
+//        response.setStatus(HttpServletResponse.SC_OK);
+//
+//    }
 
     /**
      * Writes an error message about a missing parameter to the HTTP response.
