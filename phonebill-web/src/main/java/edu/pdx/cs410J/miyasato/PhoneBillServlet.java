@@ -7,30 +7,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
 
 /**
  * This servlet ultimately provides a REST API for working with an
- * <code>PhoneBill</code>.  However, in its current state, it is an example
- * of how to use HTTP and Java servlets to store simple dictionary of words
- * and their definitions.
+ * <code>PhoneBill</code>.
  */
 public class PhoneBillServlet extends HttpServlet {
     private final Map<String, PhoneBill> phoneBills = new HashMap<>();
 
+
     /**
-     * Handles an HTTP GET request from a client by writing the definition of the
-     * word specified in the "word" HTTP parameter to the HTTP response.  If the
-     * "word" parameter is not specified, all of the entries in the dictionary
-     * are written to the HTTP response.
+     * Handles the HTTP get request from clients. Returns PhoneBill for customers if customer name
+     * is present and exists in PhoneBills, and returns PhoneBill with filtered PhoneCalls if
+     * start and end parameters are present.
+     *
+     * @param request  The servlet request
+     * @param response The servlet response
+     * @throws ServletException
+     * @throws IOException
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,10 +73,15 @@ public class PhoneBillServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+
     /**
-     * Handles an HTTP POST request by storing the dictionary entry for the
-     * "word" and "definition" request parameters.  It writes the dictionary
-     * entry to the HTTP response.
+     * Handles an HTTP POST request by storing the PhoneCall into a customer's PhoneBill.
+     * Creates a new PhoneBill if the customer does not have a PhoneBill yet.
+     *
+     * @param request  The servlet request
+     * @param response The servlet response
+     * @throws ServletException
+     * @throws IOException
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -154,6 +161,16 @@ public class PhoneBillServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Extends the functionality of getParameter by only returning the parameter value.
+     * If parameter value is null or empty string, it will throw an error.
+     *
+     * @param name     The parameter name
+     * @param request  The servlet request
+     * @param response The servlet response
+     * @return The parameter value
+     * @throws IOException
+     */
     private String getParameterThatHandlesNull(String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String value = getParameter(name, request);
         if (value == null) {
@@ -162,6 +179,14 @@ public class PhoneBillServlet extends HttpServlet {
         return value;
     }
 
+    /**
+     * Searches for the PhoneBill's PhoneCalls that are between two times
+     *
+     * @param phoneBill The PhoneBill to filter it's PhoneCalls
+     * @param startTime The lower boundary for the PhoneCalls start time
+     * @param endTime   The upper boundary for the PhoneCalls end time
+     * @return A filteredPhoneBill that only contains PhoneCalls between the two times
+     */
     private PhoneBill filterPhoneBill(PhoneBill phoneBill, Date startTime, Date endTime) {
         PhoneBill filteredPhoneBill = new PhoneBill(phoneBill.getCustomer());
 
@@ -174,11 +199,22 @@ public class PhoneBillServlet extends HttpServlet {
         return filteredPhoneBill;
     }
 
+    /**
+     * Gets the PhoneBill for a specific customer
+     *
+     * @param customer Customer name
+     * @return The customer's PhoneBill
+     */
     @VisibleForTesting
     PhoneBill getPhoneBill(String customer) {
         return this.phoneBills.get(customer);
     }
 
+    /**
+     * Adds a PhoneBill for a specific customer
+     *
+     * @param bill The PhoneBill to be add for the customer
+     */
     @VisibleForTesting
     void addPhoneBill(PhoneBill bill) {
         this.phoneBills.put(bill.getCustomer(), bill);

@@ -17,6 +17,7 @@ public class PrettyPrinter implements PhoneBillDumper<PhoneBill> {
     PrettyPrinter(Writer writer) {
         this.writer = writer;
     }
+
     @Override
     public void dump(PhoneBill phoneBill) throws IOException {
         BufferedWriter bufferedWriter;

@@ -15,6 +15,7 @@ public class TextDumper implements PhoneBillDumper<PhoneBill> {
 
     /**
      * Initializes the TextDumper
+     *
      * @param writer The writer that specifies where to write the data
      */
     TextDumper(Writer writer) {
@@ -23,6 +24,7 @@ public class TextDumper implements PhoneBillDumper<PhoneBill> {
 
     /**
      * Dumps the content of the phone bill
+     *
      * @param phoneBill The PhoneBill that we're dumping to the output
      * @throws IOException
      */

@@ -3,9 +3,7 @@ package edu.pdx.cs410J.miyasato;
 import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.ParseException;
 
 /**
@@ -56,7 +54,7 @@ public class Project4 {
                 }
                 portString = args[startOfArguments];
                 try {
-                    port = Integer.parseInt( portString );
+                    port = Integer.parseInt(portString);
                 } catch (NumberFormatException ex) {
                     printErrorMessageAndExit("Port \"" + portString + "\" must be an integer");
                     return;
@@ -73,7 +71,7 @@ public class Project4 {
 
         if (hostName == null) {
             printErrorMessageAndExit("Missing host");
-        } else if ( portString == null) {
+        } else if (portString == null) {
             printErrorMessageAndExit("Missing port");
         } else if (argumentLength - startOfArguments == 0) {
             printErrorMessageAndExit("Missing Command Line Arguments");
@@ -143,29 +141,60 @@ public class Project4 {
         System.exit(0);
     }
 
+    /**
+     * Prints an error message and then exists
+     *
+     * @param message The error message to print
+     */
     private static void printErrorMessageAndExit(String message) {
         System.err.println(message);
         System.exit(1);
     }
 
+    /**
+     * Prints the README then exists
+     */
     private static void printReadMeAndExit() {
-        System.out.println("README!");
+        InputStream readme = Project4.class.getResourceAsStream("README.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(readme));
+        String line;
+
+        try {
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+
         System.exit(0);
     }
 
+    /**
+     * Combine the given date, time and meridiem into a new String
+     *
+     * @param date     The date
+     * @param time     The time
+     * @param meridiem The meridiem
+     * @return A String that combines the date, time and meridiem
+     */
     private static String getDateTimeString(String date, String time, String meridiem) {
         return date + " " + time + " " + meridiem;
     }
+
     /**
      * Makes sure that the give response has the expected HTTP status code
-     * @param code The expected status code
+     *
+     * @param code     The expected status code
      * @param response The response from the server
      */
-    private static void checkResponseCode( int code, HttpRequestHelper.Response response )
-    {
+    private static void checkResponseCode(int code, HttpRequestHelper.Response response) {
         if (response.getCode() != code) {
             printErrorMessageAndExit(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
-                                response.getCode(), response.getContent()));
+                    response.getCode(), response.getContent()));
         }
     }
 }

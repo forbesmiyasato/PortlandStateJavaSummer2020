@@ -25,7 +25,7 @@ public class PrettyPrinterTest {
         phoneBill.addPhoneCall(phoneCall);
         prettyPrinter.dump(phoneBill);
 
-        assertThat(writer.toString().trim().replace("\r",""), containsString(
+        assertThat(writer.toString().trim().replace("\r", ""), containsString(
                 "Customer Name: Test\n" + "Phone Calls (1):\n" +
                         "                Caller          Callee            Start Time" +
                         "                  End Time                    Duration\n" +

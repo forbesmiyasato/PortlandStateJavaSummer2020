@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TextParserTest {
     @Test
-    public void checkIfTextParserWorks () throws ParserException {
+    public void checkIfTextParserWorks() throws ParserException {
         InputStream testFile = getClass().getResourceAsStream("ParserTestPhoneBill.txt");
         TextParser textParser = new TextParser(new InputStreamReader(testFile), "Test");
 
@@ -22,7 +22,7 @@ public class TextParserTest {
                 "808-200-6188 from 1/1/20, 1:39 AM to 1/2/20, 1:03 PM"));
     }
 
-    @Test (expected = ParserException.class)
+    @Test(expected = ParserException.class)
     public void exceptionThrownIfCustomerNamesDoNotMatch() throws ParserException {
         InputStream testFile = getClass().getResourceAsStream("ParserTestPhoneBill.txt");
         TextParser textParser = new TextParser(new InputStreamReader(testFile), "false");
@@ -31,7 +31,7 @@ public class TextParserTest {
         assertThat(phoneBill.getCustomer(), equalTo("Test"));
     }
 
-    @Test (expected = ParserException.class)
+    @Test(expected = ParserException.class)
     public void exceptionThrownForMalformattedTextFile() throws ParserException {
         InputStream testFile = getClass().getResourceAsStream("MalformattedPhoneBill.txt");
         TextParser textParser = new TextParser(new InputStreamReader(testFile), "Test");

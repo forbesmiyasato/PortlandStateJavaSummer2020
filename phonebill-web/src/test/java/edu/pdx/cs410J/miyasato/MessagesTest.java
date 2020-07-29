@@ -2,70 +2,57 @@ package edu.pdx.cs410J.miyasato;
 
 import org.junit.Test;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
+import static org.hamcrest.Matchers.*;
 
 public class MessagesTest {
 
-  @Test
-  public void malformedWordAndDefinitionReturnsNull() {
-    assertThat(Messages.parseDictionaryEntry("blah"), nullValue());
-  }
-
-  @Test
-  public void canParseFormattedDictionaryEntryPair() {
-    String word = "testWord";
-    String definition = "testDefinition";
-    String formatted = Messages.formatDictionaryEntry(word, definition);
-    Map.Entry<String, String> parsed = Messages.parseDictionaryEntry(formatted);
-    assertThat(parsed.getKey(), equalTo(word));
-    assertThat(parsed.getValue(), equalTo(definition));
-  }
-
-  @Test
-  public void canParseFormattedDictionaryEntryWithoutLeadingSpaces() {
-    String word = "testWord";
-    String definition = "testDefinition";
-    String formatted = Messages.formatDictionaryEntry(word, definition);
-    String trimmed = formatted.trim();
-    Map.Entry<String, String> parsed = Messages.parseDictionaryEntry(trimmed);
-    assertThat(parsed.getKey(), equalTo(word));
-    assertThat(parsed.getValue(), equalTo(definition));
-
-  }
-
-  @Test
-  public void nullDefinitionIsParsedAsNull() {
-    String word = "testWord";
-    String definition = null;
-    String formatted = Messages.formatDictionaryEntry(word, definition);
-    Map.Entry<String, String> parsed = Messages.parseDictionaryEntry(formatted);
-    assertThat(parsed.getKey(), equalTo(word));
-    assertThat(parsed.getValue(), equalTo(definition));
-  }
-
-  @Test
-  public void canParseFormattedDictionary() {
-    Map<String, String> dictionary = new HashMap<>();
-
-    for (int i = 0; i < 5; i++) {
-      String word = String.valueOf(i);
-      String definition = "QQ" + word;
-      dictionary.put(word, definition);
+    @Test
+    public void testMissingRequiredParameter() {
+        assertThat(Messages.missingRequiredParameter(CUSTOMER_PARAMETER),
+                containsString("The required parameter \"customer\" is missing"));
     }
 
-    StringWriter sw = new StringWriter();
-    Messages.formatDictionaryEntries(new PrintWriter(sw, true), dictionary);
+    @Test
+    public void testNoPhoneBillForCustomer() {
+        assertThat(Messages.noPhoneBillForCustomer("dave"),
+                containsString("No phone bill for customer dave"));
+    }
 
-    String formatted = sw.toString();
+    @Test
+    public void testWrongCallerFormat() {
+        assertThat(Messages.wrongFormatForCallerPhoneNumber(),
+                containsString("Wrong format for Caller's phone number!"));
+    }
 
-    Map<String, String> actual = Messages.parseDictionary(formatted);
-    assertThat(actual, equalTo(dictionary));
-  }
+    @Test
+    public void testWrongCalleeFormat() {
+        assertThat(Messages.wrongFormatForCalleePhoneNumber(),
+                containsString("Wrong format for Callee's phone number!"));
+    }
+
+    @Test
+    public void testWrongStartTimeFormat() {
+        assertThat(Messages.wrongFormatForStartTime(),
+                containsString("Wrong format for start time!"));
+    }
+
+    @Test
+    public void testWrongEndTimeFormat() {
+        assertThat(Messages.wrongFormatForEndTime(),
+                containsString("Wrong format for end time!"));
+    }
+
+    @Test
+    public void testStartTimeAfterEndTimeError() {
+        assertThat(Messages.startTimeAfterEndTimeError(),
+                containsString("Invalid times! Start Time is after End Time!"));
+    }
+
+    @Test
+    public void testUnParsableDate() {
+        assertThat(Messages.unParsableDate("1/XX/20 1:10 am"),
+                containsString("Unparseable date: \"1/XX/20 1:10 am\""));
+    }
 }

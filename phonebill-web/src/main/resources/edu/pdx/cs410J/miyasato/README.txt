@@ -1,24 +1,26 @@
 This is a README file!
 
-CS410J Project 3 : Pretty Printing A Phone Bill
+CS410J Project 4 :  A REST-ful Phone Bill Web Service
 Forbes Miyasato
 
-The Phone Bill Application reads in a series of options and arguments with information regarding the phone bill and
-phone call, and parses the data in order to present the user with a description of the PhoneCall and store PhoneBills.
+The Phone Bill Application's Command Line Client reads in a series of options and arguments with information regarding
+the phone bill and phone call, fetches data from the servlet via a rest client, and then parses the data in order to
+present the user with a description of the PhoneCall and store PhoneBills. There's also REST access to the Phone Bill
+Application that supports different formats of URL in order to retrieve data.
 
-usage: java edu.pdx.cs410J.<login-id>.Project3 [options] <args>
+Command line usage: java edu.pdx.cs410J.<login-id>.Project4 [options] <args>
 args are (in this order):
 customer Person whose phone bill we’re modeling
 callerNumber Phone number of caller
 calleeNumber Phone number of person who was called
-start Date and time (am/pm) call began
-end Date and time (am/pm) call ended
+start Date and time call began
+end Date and time call ended
 options are (options may appear in any order):
--pretty file Pretty print the phone bill to a text file
-or standard out (file -).
--textFile file Where to read/write the phone bill
+-host hostname Host computer on which the server runs
+-port port Port on which the server is listening
+-search Phone calls should be searched for
 -print Prints a description of the new phone call
--README
+-README Prints a README for this project and exits
 
 The command line inputs must follow the interface above.
 

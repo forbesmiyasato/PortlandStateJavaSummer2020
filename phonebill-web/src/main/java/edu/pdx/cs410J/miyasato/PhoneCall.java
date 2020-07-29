@@ -20,7 +20,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     /**
      * Initializes the PhoneCall
      */
-    public PhoneCall () {
+    public PhoneCall() {
         pCallee = "not implemented";
         pCaller = null;
         pStartTime = null;
@@ -29,13 +29,14 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Initializes the PhoneCall
-     * @param caller The caller of this PhoneCall
-     * @param callee The calle of this PhoneCall
+     *
+     * @param caller    The caller of this PhoneCall
+     * @param callee    The calle of this PhoneCall
      * @param startTime The startTime of this PhoneCall
-     * @param endTime The endTime of this PhoneCall
+     * @param endTime   The endTime of this PhoneCall
      * @throws IllegalArgumentException if there's invalid argument input
      */
-    public PhoneCall (String caller, String callee, String startTime, String endTime) {
+    public PhoneCall(String caller, String callee, String startTime, String endTime) {
         checkPhoneNumberFormat(caller, "Wrong format for Caller's phone number!");
         checkPhoneNumberFormat(callee, "Wrong format for Callee's phone number!");
         checkDateTimeFormat(startTime, "Wrong format for start time!");
@@ -60,7 +61,8 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Checks if the date time format for start time and end time is valid
-     * @param dateTime The date time as a String
+     *
+     * @param dateTime     The date time as a String
      * @param errorMessage The error message to print if invalid format
      * @throws IllegalArgumentException if the format is invalid or date time is null
      */
@@ -73,8 +75,9 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Checks if the phone number format for caller and callee is valid
+     *
      * @param phoneNumberString The phone number as a String
-     * @param errorMessage The error message to print if invalid format
+     * @param errorMessage      The error message to print if invalid format
      * @throws IllegalArgumentException if the format is invalid or phone number is null
      */
     private void checkPhoneNumberFormat(String phoneNumberString, String errorMessage) {
@@ -87,6 +90,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Gets the caller of this PhoneCall
+     *
      * @return The caller of this PhoneCall as a String
      */
     @Override
@@ -96,6 +100,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Gets the callee of this PhoneCall
+     *
      * @return The callee of this PhoneCall as a String
      */
     @Override
@@ -106,6 +111,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Gets the start time of this PhoneCall
+     *
      * @return The start time of this PhoneCall as a String
      */
     @Override
@@ -118,6 +124,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     /**
      * Gets the end time of this PhoneCall
+     *
      * @return The end time of this PhoneCall as a String
      */
     @Override
@@ -128,12 +135,12 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     }
 
     @Override
-    public Date getStartTime () {
+    public Date getStartTime() {
         return pStartTime;
     }
 
     @Override
-    public Date getEndTime () {
+    public Date getEndTime() {
         return pEndTime;
     }
 

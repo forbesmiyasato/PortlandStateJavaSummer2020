@@ -17,6 +17,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     /**
      * Constructor for the PhoneBill object, initializes the instance variables.
+     *
      * @param customerName
      */
     public PhoneBill(String customerName) {
@@ -35,6 +36,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     /**
      * Adds a PhoneCall to the PhoneBill
+     *
      * @param phoneCall the PhoneCall added to the PhoneBill
      */
     @Override
@@ -44,6 +46,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     /**
      * Gets the PhoneCalls from the PhoneBill
+     *
      * @return The Collection of PhoneCalls this PhoneBill contains
      */
     @Override

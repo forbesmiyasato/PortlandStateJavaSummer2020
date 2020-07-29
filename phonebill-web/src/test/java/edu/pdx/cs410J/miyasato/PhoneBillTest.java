@@ -17,7 +17,7 @@ public class PhoneBillTest {
     public final String testEndTime = "01/2/2020 1:03 am";
 
     @Test
-    public void addPhoneCallAddsPhoneCallToPhoneBill () {
+    public void addPhoneCallAddsPhoneCallToPhoneBill() {
         PhoneBill cPB = new PhoneBill("test");
         PhoneCall cPC = createPhoneCall();
 
@@ -28,34 +28,35 @@ public class PhoneBillTest {
     }
 
     @Test
-    public void phoneBillInitiallyHasNoPhoneCalls () {
+    public void phoneBillInitiallyHasNoPhoneCalls() {
         PhoneBill cPB = new PhoneBill("test");
 
         assertThat("Phone bill initially has no phone calls", cPB.getPhoneCalls().size(), equalTo(0));
     }
 
     @Test
-    public void getCustomerNameGetsCorrectCustomerName () {
+    public void getCustomerNameGetsCorrectCustomerName() {
         PhoneBill cPB = new PhoneBill("John");
 
         assertThat(cPB.getCustomer(), equalTo("John"));
     }
 
     @Test
-    public void getCustomerNameGetsCorrectCustomerFirstNameAndLastName () {
+    public void getCustomerNameGetsCorrectCustomerFirstNameAndLastName() {
         PhoneBill cPB = new PhoneBill("Brian Griffin");
 
         assertThat(cPB.getCustomer(), equalTo("Brian Griffin"));
     }
 
     @Test
-    public void phoneBillToStringHasTheCorrectCustomerName () {
+    public void phoneBillToStringHasTheCorrectCustomerName() {
         PhoneBill cPB = new PhoneBill("John");
 
         assertThat(cPB.toString(), containsString("John"));
     }
 
-    @Test public void phoneBillToStringHasTheCorrectAmountOfPhoneCalls () {
+    @Test
+    public void phoneBillToStringHasTheCorrectAmountOfPhoneCalls() {
         PhoneBill cPB = new PhoneBill("John");
 
         PhoneCall cPC = createPhoneCall();

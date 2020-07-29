@@ -26,7 +26,7 @@ public class TextDumperTest {
 
         textDumper.dump(phoneBill);
 
-        assertThat(writer.toString().trim().replace("\r",""), containsString("Test\n" +
+        assertThat(writer.toString().trim().replace("\r", ""), containsString("Test\n" +
                 "808-200-6188 808-200-6188 01/01/2020 01:39 AM 01/02/2020 01:03 PM"));
     }
 
