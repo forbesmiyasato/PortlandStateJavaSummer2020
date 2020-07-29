@@ -8,8 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static edu.pdx.cs410J.miyasato.PhoneBillURLParameters.*;
 
@@ -32,13 +36,30 @@ public class PhoneBillServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
 
-        String customer = getParameter(CUSTOMER_PARAMETER, request);
-        if (customer == null) {
-            missingRequiredParameter(response, CUSTOMER_PARAMETER);
-            return;
-        }
+        String customer = getParameterThatHandlesNull(CUSTOMER_PARAMETER, request, response);
+
+        String startTimeString = getParameter(START_TIME_PARAMETER, request);
+
+        String endTimeString = getParameter(END_TIME_PARAMETER, request);
 
         PhoneBill phoneBill = getPhoneBill(customer);
+
+        if (startTimeString != null && endTimeString != null) {
+            String pattern = "MM/dd/yyyy hh:mm aa";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            simpleDateFormat.setLenient(false);
+            Date startTime;
+            Date endTime;
+            try {
+                startTime = simpleDateFormat.parse(startTimeString);
+                endTime = simpleDateFormat.parse(endTimeString);
+            } catch (ParseException e) {
+                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
+                throw new ServletException(e.getMessage());
+            }
+            phoneBill = filterPhoneBill(phoneBill, startTime, endTime);
+        }
+
         if (phoneBill == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(customer));
         }
@@ -77,6 +98,7 @@ public class PhoneBillServlet extends HttpServlet {
             PhoneCall phoneCall = new PhoneCall(caller, callee, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
         } catch (IllegalArgumentException e){
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
             throw new ServletException(e.getMessage());
         }
 
@@ -138,6 +160,19 @@ public class PhoneBillServlet extends HttpServlet {
         }
         return value;
     }
+
+    private PhoneBill filterPhoneBill (PhoneBill phoneBill, Date startTime, Date endTime) {
+        PhoneBill filteredPhoneBill = new PhoneBill(phoneBill.getCustomer());
+
+        for (PhoneCall phoneCall : phoneBill.getPhoneCalls()) {
+            if (phoneCall.getStartTime().after(startTime) && phoneCall.getEndTime().before(endTime)) {
+                filteredPhoneBill.addPhoneCall(phoneCall);
+            }
+        }
+
+        return filteredPhoneBill;
+    }
+
     @VisibleForTesting
     PhoneBill getPhoneBill(String customer) {
         return this.phoneBills.get(customer);

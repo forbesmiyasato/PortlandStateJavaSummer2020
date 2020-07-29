@@ -81,4 +81,41 @@ public class Project4IT extends InvokeMainTestCase {
         assertThat(result.getExitCode(), equalTo(0));
         assertThat(result.getTextWrittenToStandardOut(), containsString("Phone call from"));
     }
+
+    @Test
+    public void test9NonIntegerPortNumber() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", "kweq", "-print", "Invalid");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("must be an integer"));
+    }
+
+    @Test
+    public void test10SearchWithOneArguments() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-search", "one");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing command line arguments for search"));
+    }
+
+    @Test
+    public void test11SearchWithEightArguments() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-search", "name",
+                "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm", "extra");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Extraneous command line arguments for search"));
+    }
+
+    @Test
+    public void test12SearchWithValidArguments() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-search", "name",
+                "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm");
+        assertThat(result.getExitCode(), equalTo(0));
+    }
+
+    @Test
+    public void test13PrintWithSearch() {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-search", "-print", "name",
+                "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm");
+        assertThat(result.getExitCode(), equalTo(1));
+        assertThat(result.getTextWrittenToStandardError(), containsString("No phone call to print!"));
+    }
 }

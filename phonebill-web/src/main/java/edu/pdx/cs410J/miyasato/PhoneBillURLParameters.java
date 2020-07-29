@@ -8,7 +8,7 @@ public interface PhoneBillURLParameters {
 
     String CALLEE_NUMBER_PARAMETER = "calleeNumber";
 
-    String START_TIME_PARAMETER = "startTime";
+    String START_TIME_PARAMETER = "start";
 
-    String END_TIME_PARAMETER = "endTime";
+    String END_TIME_PARAMETER = "end";
 }

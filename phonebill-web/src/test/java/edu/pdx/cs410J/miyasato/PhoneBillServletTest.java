@@ -28,7 +28,7 @@ public class PhoneBillServletTest {
   public final String testCallee = "808-200-6188";
   public final String testStartTime = "1/1/2020 9:39 am";
   public final String testEndTime = "01/2/2020 1:03 pm";
-
+  public final String testCustomer = "TEST CUSTOMER";
   @Test
   public void requestWithNoCustomerReturnMissingParameter() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
@@ -45,25 +45,22 @@ public class PhoneBillServletTest {
   @Test
   public void requestCustomerWithNoPhoneBillReturnsNotFound() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
-    String customerName = "Dave";
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(customerName);
+    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
     servlet.doGet(request, response);
 
-    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(customerName));
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(testCustomer));
   }
 
   @Test
   public void addPhoneCallToBill() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
 
-    String customer = "TEST WORD";
-
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(customer);
+    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
     when(request.getParameter(CALLER_NUMBER_PARAMETER)).thenReturn(testCaller);
     when(request.getParameter(CALLEE_NUMBER_PARAMETER)).thenReturn(testCallee);
     when(request.getParameter(START_TIME_PARAMETER)).thenReturn(testStartTime);
@@ -80,9 +77,9 @@ public class PhoneBillServletTest {
     verify(pw, times(0)).println(Mockito.any(String.class));
     verify(response).setStatus(HttpServletResponse.SC_OK);
 
-    PhoneBill phoneBill = servlet.getPhoneBill(customer);
+    PhoneBill phoneBill = servlet.getPhoneBill(testCustomer);
     assertThat(phoneBill, notNullValue());
-    assertThat(phoneBill.getCustomer(), equalTo(customer));
+    assertThat(phoneBill.getCustomer(), equalTo(testCustomer));
 
     PhoneCall phoneCall = phoneBill.getPhoneCalls().iterator().next();
     assertThat(phoneCall.getCaller(), equalTo(testCaller));
@@ -92,16 +89,15 @@ public class PhoneBillServletTest {
 
   @Test
   public void requestingExistingPhoneBillDumpsItToPrintWriter() throws IOException, ServletException {
-    String customer = "TEST CUSTOMER";
 
-    PhoneBill bill = new PhoneBill(customer);
-    bill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+    PhoneBill phoneBill = new PhoneBill(testCustomer);
+    phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
 
     PhoneBillServlet servlet = new PhoneBillServlet();
-    servlet.addPhoneBill(bill);
+    servlet.addPhoneBill(phoneBill);
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(customer);
+    when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
     HttpServletResponse response = mock(HttpServletResponse.class);
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
@@ -112,7 +108,8 @@ public class PhoneBillServletTest {
     verify(response).setStatus(HttpServletResponse.SC_OK);
     String textPhoneBill = sw.toString();
 
-    assertThat(textPhoneBill, containsString(customer));
+    assertThat(textPhoneBill, containsString(testCustomer));
     assertThat(textPhoneBill, containsString(testCaller));
   }
+
 }

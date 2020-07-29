@@ -85,10 +85,10 @@ public class Project4 {
 
         try {
             if (search) {
-                final int searchArgs = 7;
-                if (argumentLength - startOfArguments < searchArgs) {
+                final int dateArgsLength = 6;
+                if (argumentLength - startOfArguments < dateArgsLength) {
                     printErrorMessageAndExit("Missing command line arguments for search");
-                } else if (argumentLength - startOfArguments > searchArgs) {
+                } else if (argumentLength - startOfArguments > dateArgsLength) {
                     printErrorMessageAndExit("Extraneous command line arguments for search");
                 }
             } else if (argumentLength == 5) {
@@ -130,7 +130,9 @@ public class Project4 {
         }
 
         if (print) {
-            assert phoneCall != null;
+            if (phoneCall == null) {
+                printErrorMessageAndExit("No phone call to print!");
+            }
             System.out.println(phoneCall.toString());
         }
 
@@ -155,16 +157,8 @@ public class Project4 {
     private static void checkResponseCode( int code, HttpRequestHelper.Response response )
     {
         if (response.getCode() != code) {
-            error(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
+            printErrorMessageAndExit(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
                                 response.getCode(), response.getContent()));
         }
-    }
-
-    private static void error( String message )
-    {
-        PrintStream err = System.err;
-        err.println("** " + message);
-
-        System.exit(1);
     }
 }
