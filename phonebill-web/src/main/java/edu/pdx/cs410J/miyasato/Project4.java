@@ -91,6 +91,15 @@ public class Project4 {
                 } else if (argumentLength - startOfArguments > dateArgsLength) {
                     printErrorMessageAndExit("Extraneous command line arguments for search");
                 }
+                String startTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
+                String endTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
+                try {
+                    phoneBill = client.getFilteredPhoneBill(customer, startTimeString, endTimeString);
+                    PrettyPrinter prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
+                    prettyPrinter.dump(phoneBill);
+                } catch (IOException | ParserException e) {
+                    printErrorMessageAndExit(e.getMessage());
+                }
             } else if (argumentLength == 5) {
                 try {
                     phoneBill = client.getPhoneBill(customer);
@@ -102,14 +111,8 @@ public class Project4 {
             } else if (argumentLength - startOfArguments == phoneCallArgsLength) {
                 callerNumber = args[startOfArguments++];
                 calleeNumber = args[startOfArguments++];
-                startDate = args[startOfArguments++];
-                startTime = args[startOfArguments++];
-                startAmPm = args[startOfArguments++];
-                endDate = args[startOfArguments++];
-                endTime = args[startOfArguments++];
-                endAmPm = args[startOfArguments++];
-                String startTimeString = startDate + " " + startTime + " " + startAmPm;
-                String endTimeString = endDate + " " + endTime + " " + endAmPm;
+                String startTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
+                String endTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
                 try {
                     client.addPhoneCall(customer, callerNumber, calleeNumber, startTimeString, endTimeString);
                 } catch (IOException e) {
@@ -133,6 +136,7 @@ public class Project4 {
             if (phoneCall == null) {
                 printErrorMessageAndExit("No phone call to print!");
             }
+            assert phoneCall != null;
             System.out.println(phoneCall.toString());
         }
 
@@ -149,6 +153,9 @@ public class Project4 {
         System.exit(0);
     }
 
+    private static String getDateTimeString(String date, String time, String meridiem) {
+        return date + " " + time + " " + meridiem;
+    }
     /**
      * Makes sure that the give response has the expected HTTP status code
      * @param code The expected status code

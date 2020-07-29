@@ -46,6 +46,14 @@ public class PhoneBillRestClient extends HttpRequestHelper
       return parser.parse();
     }
 
+    public PhoneBill getFilteredPhoneBill(String customer, String startTime, String endTime) throws IOException, ParserException {
+        Response response = get(this.url, Map.of(CUSTOMER_PARAMETER, customer, START_TIME_PARAMETER, startTime, END_TIME_PARAMETER, endTime));
+        throwExceptionIfNotOkayHttpStatus(response);
+        String content = response.getContent();
+        TextParser parser = new TextParser(new StringReader(content), customer);
+        return parser.parse();
+    }
+
     public void addPhoneCall(String customer, String caller, String callee, String startTime, String endTime) throws IOException {
       Response response = postToMyURL(Map.of(CUSTOMER_PARAMETER, customer, CALLER_NUMBER_PARAMETER, caller,
               CALLEE_NUMBER_PARAMETER, callee, START_TIME_PARAMETER, startTime, END_TIME_PARAMETER, endTime));

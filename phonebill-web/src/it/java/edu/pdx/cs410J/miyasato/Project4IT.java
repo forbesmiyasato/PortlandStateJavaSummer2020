@@ -105,7 +105,12 @@ public class Project4IT extends InvokeMainTestCase {
     }
 
     @Test
-    public void test12SearchWithValidArguments() {
+    public void test12SearchWithValidArguments() throws IOException {
+        PhoneBillRestClient client = new PhoneBillRestClient(HOSTNAME, Integer.parseInt(PORT));
+
+        client.addPhoneCall("name", "808-200-6188", "808-200-6188", "1/1/2020 1:11 am",
+                "1/2/2020 1:11 am");
+
         MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "-search", "name",
                 "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm");
         assertThat(result.getExitCode(), equalTo(0));
@@ -117,5 +122,11 @@ public class Project4IT extends InvokeMainTestCase {
                 "1/1/2020", "1:39", "am", "01/2/2020", "1:03", "pm");
         assertThat(result.getExitCode(), equalTo(1));
         assertThat(result.getTextWrittenToStandardError(), containsString("No phone call to print!"));
+    }
+
+    @Test
+    public void test14OneArgumentWithCustomer() throws IOException {
+        MainMethodResult result = invokeMain( Project4.class, "-host", HOSTNAME, "-port", PORT, "name");
+        assertThat(result.getExitCode(), equalTo(0));
     }
 }

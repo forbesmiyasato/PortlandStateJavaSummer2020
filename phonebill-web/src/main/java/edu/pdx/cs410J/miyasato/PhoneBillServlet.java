@@ -44,6 +44,11 @@ public class PhoneBillServlet extends HttpServlet {
 
         PhoneBill phoneBill = getPhoneBill(customer);
 
+        if (phoneBill == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(customer));
+            return;
+        }
+
         if (startTimeString != null && endTimeString != null) {
             String pattern = "MM/dd/yyyy hh:mm aa";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -60,14 +65,9 @@ public class PhoneBillServlet extends HttpServlet {
             phoneBill = filterPhoneBill(phoneBill, startTime, endTime);
         }
 
-        if (phoneBill == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.noPhoneBillForCustomer(customer));
-        }
-        else {
-            TextDumper textDumper = new TextDumper(response.getWriter());
-            textDumper.dump(phoneBill);
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+        TextDumper textDumper = new TextDumper(response.getWriter());
+        textDumper.dump(phoneBill);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /**
@@ -97,7 +97,7 @@ public class PhoneBillServlet extends HttpServlet {
         try {
             PhoneCall phoneCall = new PhoneCall(caller, callee, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
             throw new ServletException(e.getMessage());
         }
@@ -161,11 +161,11 @@ public class PhoneBillServlet extends HttpServlet {
         return value;
     }
 
-    private PhoneBill filterPhoneBill (PhoneBill phoneBill, Date startTime, Date endTime) {
+    private PhoneBill filterPhoneBill(PhoneBill phoneBill, Date startTime, Date endTime) {
         PhoneBill filteredPhoneBill = new PhoneBill(phoneBill.getCustomer());
 
         for (PhoneCall phoneCall : phoneBill.getPhoneCalls()) {
-            if (phoneCall.getStartTime().after(startTime) && phoneCall.getEndTime().before(endTime)) {
+            if (phoneCall.getStartTime().after(startTime) && phoneCall.getStartTime().before(endTime)) {
                 filteredPhoneBill.addPhoneCall(phoneCall);
             }
         }
