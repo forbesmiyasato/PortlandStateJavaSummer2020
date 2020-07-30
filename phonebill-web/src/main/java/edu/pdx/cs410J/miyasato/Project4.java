@@ -93,6 +93,9 @@ public class Project4 {
                 String endTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
                 try {
                     phoneBill = client.getFilteredPhoneBill(customer, startTimeString, endTimeString);
+                    if (phoneBill.getPhoneCalls().isEmpty()) {
+                        System.out.println("No phone calls between those times");
+                    }
                     PrettyPrinter prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
                     prettyPrinter.dump(phoneBill);
                 } catch (IOException | ParserException e) {
@@ -124,7 +127,7 @@ public class Project4 {
                     }
                 }
             } else {
-                printErrorMessageAndExit("Invalid behavior");
+                printErrorMessageAndExit("Invalid behavior, please read the usage below!");
             }
         } catch (PhoneBillRestClient.PhoneBillRestException e) {
             printErrorMessageAndExit(e.getMessage());
@@ -147,7 +150,21 @@ public class Project4 {
      * @param message The error message to print
      */
     private static void printErrorMessageAndExit(String message) {
-        System.err.println(message);
+        PrintStream err = System.err;
+        err.println(message);
+        err.println("usage: java edu.pdx.cs410J.<login-id>.Project4 [options] <args>");
+        err.println("        args are (in this order):");
+        err.println("customer                         Person whose phone bill we’re modeling");
+        err.println("callerNumber                     Phone number of caller");
+        err.println("calleeNumber                     Phone number of person who was called");
+        err.println("start                            Date and time call began");
+        err.println("end                              Date and time call ended");
+        err.println("options are (options may appear in any order):");
+        err.println("-host                            hostname Host computer on which the server runs");
+        err.println("-port                            port Port on which the server is listening");
+        err.println("-search                          Phone calls should be searched for");
+        err.println("-print                           Prints a description of the new phone call");
+        err.println("-README                          Prints a README for this project and exits");
         System.exit(1);
     }
 
@@ -185,16 +202,16 @@ public class Project4 {
         return date + " " + time + " " + meridiem;
     }
 
-    /**
-     * Makes sure that the give response has the expected HTTP status code
-     *
-     * @param code     The expected status code
-     * @param response The response from the server
-     */
-    private static void checkResponseCode(int code, HttpRequestHelper.Response response) {
-        if (response.getCode() != code) {
-            printErrorMessageAndExit(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
-                    response.getCode(), response.getContent()));
-        }
-    }
+//    /**
+//     * Makes sure that the give response has the expected HTTP status code
+//     *
+//     * @param code     The expected status code
+//     * @param response The response from the server
+//     */
+//    private static void checkResponseCode(int code, HttpRequestHelper.Response response) {
+//        if (response.getCode() != code) {
+//            printErrorMessageAndExit(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
+//                    response.getCode(), response.getContent()));
+//        }
+//    }
 }

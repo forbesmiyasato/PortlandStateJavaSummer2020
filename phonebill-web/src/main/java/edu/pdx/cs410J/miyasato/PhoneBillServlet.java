@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,7 +53,12 @@ public class PhoneBillServlet extends HttpServlet {
             return;
         }
 
-        if (startTimeString != null && endTimeString != null) {
+        if ((startTimeString == null && endTimeString != null) || (startTimeString != null && endTimeString == null)) {
+            String message = (startTimeString == null ? Messages.missingRequiredParameter(START_TIME_PARAMETER)
+                    : Messages.missingRequiredParameter(END_TIME_PARAMETER));
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, message);
+            return;
+        } else if (startTimeString != null && endTimeString != null) {
             String pattern = "MM/dd/yyyy hh:mm aa";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             simpleDateFormat.setLenient(false);
@@ -60,16 +67,19 @@ public class PhoneBillServlet extends HttpServlet {
             try {
                 startTime = simpleDateFormat.parse(startTimeString);
                 endTime = simpleDateFormat.parse(endTimeString);
-            } catch (ParseException e) {
+                if (startTime.after(endTime)) {
+                    throw new IllegalArgumentException("Invalid times! Start Time is after End Time!");
+                }
+            } catch (ParseException | IllegalArgumentException e) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
                 return;
-//                throw new ServletException(e.getMessage());
             }
             phoneBill = filterPhoneBill(phoneBill, startTime, endTime);
         }
 
         TextDumper textDumper = new TextDumper(response.getWriter());
         textDumper.dump(phoneBill);
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -107,7 +117,6 @@ public class PhoneBillServlet extends HttpServlet {
             phoneBill.addPhoneCall(phoneCall);
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
-//            throw new ServletException(e.getMessage());
         }
 
         this.phoneBills.put(customer, phoneBill);

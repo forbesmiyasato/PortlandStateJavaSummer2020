@@ -162,12 +162,13 @@ public class PhoneBillServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         String textPhoneBill = sw.toString();
 
+        System.out.println(textPhoneBill);
         assertThat(textPhoneBill, containsString(testCustomer));
         assertThat(textPhoneBill, not(containsString(testCaller)));
     }
 
     @Test
-    public void requestWithWrongParameterReturnsNotFound() throws ServletException, IOException {
+    public void searchWithMissingEndParameterThrowsError() throws ServletException, IOException {
         PhoneBill phoneBill = new PhoneBill(testCustomer);
         phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
 
@@ -183,10 +184,8 @@ public class PhoneBillServletTest {
         when(response.getWriter()).thenReturn(pw);
         servlet.doGet(request, response);
 
-        verify(response).setStatus(HttpServletResponse.SC_OK);
-        String textPhoneBill = sw.toString();
-
-        assertThat(textPhoneBill, containsString(testCustomer));
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                Messages.missingRequiredParameter(END_TIME_PARAMETER));
     }
 
     @Test
@@ -293,5 +292,27 @@ public class PhoneBillServletTest {
 
         verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
                 Messages.unParsableDate(invalidDate));
+    }
+
+    @Test
+    public void searchWithMissingStartParameterThrowsError() throws IOException, ServletException {
+        PhoneBill phoneBill = new PhoneBill(testCustomer);
+        phoneBill.addPhoneCall(new PhoneCall(testCaller, testCallee, testStartTime, testEndTime));
+
+        PhoneBillServlet servlet = new PhoneBillServlet();
+        servlet.addPhoneBill(phoneBill);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(CUSTOMER_PARAMETER)).thenReturn(testCustomer);
+        when(request.getParameter(END_TIME_PARAMETER)).thenReturn("1/1/2020 2:39 pm");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        when(response.getWriter()).thenReturn(pw);
+
+        servlet.doGet(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                Messages.missingRequiredParameter(START_TIME_PARAMETER));
     }
 }

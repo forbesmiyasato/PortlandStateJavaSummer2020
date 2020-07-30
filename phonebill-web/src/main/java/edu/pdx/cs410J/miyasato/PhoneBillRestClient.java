@@ -104,24 +104,33 @@ public class PhoneBillRestClient extends HttpRequestHelper {
     private Response throwExceptionIfNotOkayHttpStatus(Response response) {
         int code = response.getCode();
         if (code != HTTP_OK) {
-            throw new PhoneBillRestException(code);
+            throw new PhoneBillRestException(code, response.getContent());
         }
         return response;
     }
 
     /**
      * The PhoneBillRestException class that extends RuntimeException,
-     * and helps clients get the HTTP status code
+     * and helps clients get the HTTP status code and response content for exception
      */
     @VisibleForTesting
     class PhoneBillRestException extends RuntimeException {
         private final int httpStatusCode;
 
-        PhoneBillRestException(int httpStatusCode) {
-            super("Got an HTTP Status Code of " + httpStatusCode);
+        /**
+         * Initializes the PhoneBillRestException
+         * @param httpStatusCode The http status code
+         * @param reponseContent The response content
+         */
+        PhoneBillRestException(int httpStatusCode, String reponseContent) {
+            super("Got an HTTP Status Code of " + httpStatusCode + "\nReason: " + reponseContent);
             this.httpStatusCode = httpStatusCode;
         }
 
+        /**
+         * Gets the http status code for exception
+         * @return The http status code
+         */
         public int getHttpStatusCode() {
             return this.httpStatusCode;
         }
