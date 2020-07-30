@@ -37,12 +37,19 @@ public class PhoneBillServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
+        String customer = null;
+        String startTimeString = null;
+        String endTimeString = null;
+        try {
+            customer = getParameterThatHandlesNull(CUSTOMER_PARAMETER, request, response);
 
-        String customer = getParameterThatHandlesNull(CUSTOMER_PARAMETER, request, response);
+            startTimeString = getParameter(START_TIME_PARAMETER, request);
 
-        String startTimeString = getParameter(START_TIME_PARAMETER, request);
-
-        String endTimeString = getParameter(END_TIME_PARAMETER, request);
+            endTimeString = getParameter(END_TIME_PARAMETER, request);
+        } catch (RuntimeException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            return;
+        }
 
         PhoneBill phoneBill = getPhoneBill(customer);
 
