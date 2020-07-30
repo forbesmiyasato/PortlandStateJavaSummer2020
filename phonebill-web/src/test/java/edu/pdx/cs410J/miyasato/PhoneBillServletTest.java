@@ -291,7 +291,7 @@ public class PhoneBillServletTest {
         servlet.doGet(request, response);
 
         verify(response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
-                Messages.unParsableDate(invalidDate));
+                Messages.wrongFormatForStartTime());
     }
 
     @Test

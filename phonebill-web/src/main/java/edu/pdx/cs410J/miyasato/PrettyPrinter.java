@@ -50,6 +50,6 @@ public class PrettyPrinter implements PhoneBillDumper<PhoneBill> {
                     dateFormat.format(startTime), dateFormat.format(endTime), duration);
         }
 
-        writer.close();
+        writer.flush();
     }
 }

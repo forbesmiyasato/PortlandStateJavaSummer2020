@@ -93,11 +93,11 @@ public class Project4 {
                 String endTimeString = getDateTimeString(args[startOfArguments++], args[startOfArguments++], args[startOfArguments++]);
                 try {
                     phoneBill = client.getFilteredPhoneBill(customer, startTimeString, endTimeString);
+                    PrettyPrinter prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
+                    prettyPrinter.dump(phoneBill);
                     if (phoneBill.getPhoneCalls().isEmpty()) {
                         System.out.println("No phone calls between those times");
                     }
-                    PrettyPrinter prettyPrinter = new PrettyPrinter(new PrintWriter(System.out, true));
-                    prettyPrinter.dump(phoneBill);
                 } catch (IOException | ParserException e) {
                     printErrorMessageAndExit(e.getMessage());
                 }

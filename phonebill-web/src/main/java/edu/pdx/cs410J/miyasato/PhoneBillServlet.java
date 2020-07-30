@@ -6,8 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,10 +63,12 @@ public class PhoneBillServlet extends HttpServlet {
             Date startTime;
             Date endTime;
             try {
+                checkDateTimeFormat(startTimeString, Messages.wrongFormatForStartTime());
+                checkDateTimeFormat(endTimeString, Messages.wrongFormatForEndTime());
                 startTime = simpleDateFormat.parse(startTimeString);
                 endTime = simpleDateFormat.parse(endTimeString);
                 if (startTime.after(endTime)) {
-                    throw new IllegalArgumentException("Invalid times! Start Time is after End Time!");
+                    throw new IllegalArgumentException(Messages.startTimeAfterEndTimeError());
                 }
             } catch (ParseException | IllegalArgumentException e) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
@@ -208,5 +208,19 @@ public class PhoneBillServlet extends HttpServlet {
     @VisibleForTesting
     void addPhoneBill(PhoneBill bill) {
         this.phoneBills.put(bill.getCustomer(), bill);
+    }
+
+    /**
+     * Checks if the date time format for start time and end time is valid
+     *
+     * @param dateTime     The date time as a String
+     * @param errorMessage The error message to print if invalid format
+     * @throws IllegalArgumentException if the format is invalid or date time is null
+     */
+    private void checkDateTimeFormat(String dateTime, String errorMessage) {
+        String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2} (AM|PM|am|pm|aM|Am|pM|Pm)$";
+        if (dateTime == null || !dateTime.matches(dateTimeRegex)) {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 }
