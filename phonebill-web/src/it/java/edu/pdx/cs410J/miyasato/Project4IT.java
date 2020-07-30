@@ -19,12 +19,6 @@ public class Project4IT extends InvokeMainTestCase {
     private static final String HOSTNAME = "localhost";
     private static final String PORT = System.getProperty("http.port", "8080");
 
-//    @Test
-//    public void test0RemoveAllMappings() throws IOException {
-//      PhoneBillRestClient client = new PhoneBillRestClient(HOSTNAME, Integer.parseInt(PORT));
-//      client.removeAllPhoneBills();
-//    }
-
     @Test
     public void test1NoCommandLineArguments() {
         MainMethodResult result = invokeMain(Project4.class);
@@ -34,7 +28,7 @@ public class Project4IT extends InvokeMainTestCase {
 
     @Test
     public void test2NoHost() {
-        MainMethodResult result = invokeMain(Project4.class, "-port", "8080", "-search");
+        MainMethodResult result = invokeMain(Project4.class, "-port", PORT, "-search");
         assertThat(result.getExitCode(), equalTo(1));
         assertThat(result.getTextWrittenToStandardError(), containsString("Missing host"));
     }

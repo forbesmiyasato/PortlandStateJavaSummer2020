@@ -95,11 +95,6 @@ public class PhoneBillRestClient extends HttpRequestHelper {
         return post(this.url, phoneCallEntries);
     }
 
-//    public void removeAllPhoneBills() throws IOException {
-//      Response response = delete(this.url, Map.of());
-//      throwExceptionIfNotOkayHttpStatus(response);
-//    }
-
     /**
      * Throws a PhoneBillRestException if the status code of response is not 200
      *
