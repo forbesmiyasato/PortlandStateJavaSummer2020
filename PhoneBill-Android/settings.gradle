@@ -1,0 +1,2 @@
+rootProject.name='Phone Bill'
+include ':app'

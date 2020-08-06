@@ -37,9 +37,9 @@ public class PhoneBillServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
-        String customer = null;
-        String startTimeString = null;
-        String endTimeString = null;
+        String customer;
+        String startTimeString;
+        String endTimeString;
         try {
             customer = getParameterThatHandlesNull(CUSTOMER_PARAMETER, request, response);
 
