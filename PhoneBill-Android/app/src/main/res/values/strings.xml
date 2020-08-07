@@ -34,4 +34,5 @@
     <string name="callee">Callee Phone Number</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
+    <string name="print_phone_bill">Print Phone Bill</string>
 </resources>

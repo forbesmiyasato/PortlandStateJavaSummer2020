@@ -21,11 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity
 {
+  private PhoneBillModel phoneBillModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -45,6 +43,8 @@ public class MainActivity extends AppCompatActivity
                 .setAction("Action", null).show();
       }
     });
+
+    phoneBillModel = new PhoneBillModel();
   }
 
   @Override
@@ -72,48 +72,49 @@ public class MainActivity extends AppCompatActivity
     return true;
   }
 
-  public void onReadme() {
-    startActivity (new Intent(this,
+  public void onReadme()
+  {
+    startActivity(new Intent(this,
             Readme.class));
   }
 
-  public void createAccountClicked (View cView)
+  public void addPhoneBillClicked(View cView)
   {
-    final View registerLayout = LayoutInflater.from
-            (MainActivity.this).inflate (R.layout.activity_add_phone_call,
+    final View addLayout = LayoutInflater.from
+            (MainActivity.this).inflate(R.layout.activity_add_phone_call,
             null);
 
-    new MaterialStyledDialog.Builder (MainActivity.this)
-            .setIcon (R.drawable.ic_phonebill_foreground)
-            .setTitle ("Add a Phone Bill")
-            .setDescription ("Please fill all fields")
-            .setCustomView (registerLayout)
-            .setNegativeText ("CANCEL")
-            .onNegative (new MaterialDialog.SingleButtonCallback ()
+    new MaterialStyledDialog.Builder(MainActivity.this)
+            .setIcon(R.drawable.ic_phonebill_foreground)
+            .setTitle("Add a Phone Bill")
+            .setDescription("Please fill all fields")
+            .setCustomView(addLayout)
+            .setNegativeText("CANCEL")
+            .onNegative(new MaterialDialog.SingleButtonCallback()
             {
               @Override
-              public void onClick (@NonNull MaterialDialog dialog,
-                                   @NonNull DialogAction which)
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
               {
-                dialog.dismiss ();
+                dialog.dismiss();
               }
             })
-            .setPositiveText ("ADD")
-            .onPositive (new MaterialDialog.SingleButtonCallback ()
+            .setPositiveText("ADD")
+            .onPositive(new MaterialDialog.SingleButtonCallback()
             {
               @Override
-              public void onClick (@NonNull MaterialDialog dialog,
-                                   @NonNull DialogAction which)
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
               {
-                MaterialEditText addCustomerName = registerLayout.findViewById
+                MaterialEditText addCustomerName = addLayout.findViewById
                         (R.id.add_customer_name);
-                MaterialEditText addCaller = registerLayout.findViewById
+                MaterialEditText addCaller = addLayout.findViewById
                         (R.id.add_caller);
-                MaterialEditText addCallee = registerLayout.findViewById
+                MaterialEditText addCallee = addLayout.findViewById
                         (R.id.add_callee);
-                MaterialEditText addStartTime = registerLayout.findViewById
+                MaterialEditText addStartTime = addLayout.findViewById
                         (R.id.add_start_time);
-                MaterialEditText addEndTime = registerLayout.findViewById
+                MaterialEditText addEndTime = addLayout.findViewById
                         (R.id.add_end_time);
 
                 if (fieldIsEmpty(addCustomerName)) return;
@@ -122,22 +123,79 @@ public class MainActivity extends AppCompatActivity
                 if (fieldIsEmpty(addStartTime)) return;
                 if (fieldIsEmpty(addEndTime)) return;
 
+                String customerName = addCustomerName.getText().toString();
+                String caller = addCaller.getText().toString();
+                String callee = addCaller.getText().toString();
+                String startTime = addStartTime.getText().toString();
+                String endTime = addEndTime.getText().toString();
 
-//                registerUser (editRegisterName.getText ().toString (),
-//                        editRegisterPassword.getText ().toString ());
+                PhoneCall phoneCall = null;
+                try
+                {
+                  phoneCall = new PhoneCall(caller, callee, startTime, endTime);
+                } catch (IllegalArgumentException e)
+                {
+                  displayToastMessage(e.getMessage());
+                  return;
+                }
+
+                phoneBillModel.addPhoneCallToPhoneBill(customerName, phoneCall);
+                displayToastMessage(customerName + " added " + phoneCall.toString());
               }
-            }).show ();
+            }).show();
   }
 
-  private boolean fieldIsEmpty(MaterialEditText cEditText) {
-    if (TextUtils.isEmpty (cEditText.getText ().toString ()))
+  public void getPhoneBillClicked(View cView)
+  {
+    PhoneBill phoneBill = null;
+
+    final View getLayout = LayoutInflater.from
+            (MainActivity.this).inflate(R.layout.acti,
+            null);
+
+    new MaterialStyledDialog.Builder(MainActivity.this)
+            .setIcon(R.drawable.ic_phonebill_foreground)
+            .setTitle("Get Phone Bill")
+            .setDescription("Please provide the customer name")
+            .setCustomView(getLayout)
+            .setNegativeText("CANCEL")
+            .onNegative(new MaterialDialog.SingleButtonCallback()
+            {
+              @Override
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
+              {
+                dialog.dismiss();
+              }
+            })
+            .setPositiveText("GET")
+            .onPositive(new MaterialDialog.SingleButtonCallback()
+            {
+              @Override
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
+              {
+                MaterialEditText getCustomerName = getLayout.findViewById
+                        (R.id.get_customer_name);
+              }
+            }).show();
+  }
+
+  private boolean fieldIsEmpty(MaterialEditText cEditText)
+  {
+    if (TextUtils.isEmpty(cEditText.getText().toString()))
     {
-      Toast.makeText (MainActivity.this,
-              cEditText.getHint() + " cannot be empty",
-              Toast.LENGTH_SHORT).show ();
+      displayToastMessage(cEditText.getHint() + " cannot be empty");
       return true;
     }
     return false;
+  }
+
+  private void displayToastMessage(String errorMessage)
+  {
+    Toast.makeText(MainActivity.this,
+            errorMessage,
+            Toast.LENGTH_LONG).show();
   }
 
 //  String pattern = "MM/dd/yyyy hh:mm aa";

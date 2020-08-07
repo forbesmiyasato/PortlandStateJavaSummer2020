@@ -36,7 +36,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
    * @param endTime   The endTime of this PhoneCall
    * @throws IllegalArgumentException if there's invalid argument input
    */
-  public PhoneCall(String caller, String callee, String startTime, String endTime) {
+  public PhoneCall(String caller, String callee, String startTime, String endTime) throws IllegalArgumentException{
     checkPhoneNumberFormat(caller, "Wrong format for Caller's phone number!");
     checkPhoneNumberFormat(callee, "Wrong format for Callee's phone number!");
     checkDateTimeFormat(startTime, "Wrong format for start time!");
