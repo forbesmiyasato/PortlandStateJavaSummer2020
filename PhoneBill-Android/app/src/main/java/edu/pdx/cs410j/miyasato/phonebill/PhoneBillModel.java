@@ -27,6 +27,7 @@ public class PhoneBillModel
     }
 
     phoneBill.addPhoneCall(phoneCall);
+    phoneBills.put(customerName, phoneBill);
   }
 
   public PhoneBill searchPhoneBill(PhoneBill phoneBill, Date startTime, Date endTime)

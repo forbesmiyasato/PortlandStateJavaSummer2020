@@ -147,10 +147,10 @@ public class MainActivity extends AppCompatActivity
 
   public void getPhoneBillClicked(View cView)
   {
-    PhoneBill phoneBill = null;
+    final PhoneBill phoneBill = null;
 
     final View getLayout = LayoutInflater.from
-            (MainActivity.this).inflate(R.layout.acti,
+            (MainActivity.this).inflate(R.layout.activity_get_phone_bill,
             null);
 
     new MaterialStyledDialog.Builder(MainActivity.this)
@@ -177,6 +177,20 @@ public class MainActivity extends AppCompatActivity
               {
                 MaterialEditText getCustomerName = getLayout.findViewById
                         (R.id.get_customer_name);
+                if (fieldIsEmpty(getCustomerName)) return;
+
+                try
+                {
+                  PhoneBill phoneBill1 = phoneBillModel.getPhoneBill(getCustomerName.getText().toString());
+                } catch (NullPointerException e) {
+                  displayToastMessage(e.getMessage());
+                  return;
+                }
+
+                Intent intent = new Intent(MainActivity.this, PrintResults.class);
+                intent.putExtra("customer", getCustomerName.getText().toString());
+                intent.putExtra("PhoneBill", phoneBill);
+                startActivity(intent);
               }
             }).show();
   }
