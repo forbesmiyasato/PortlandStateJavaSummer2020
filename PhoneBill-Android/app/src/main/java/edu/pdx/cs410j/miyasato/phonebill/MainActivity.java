@@ -21,6 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity
 {
   private PhoneBillModel phoneBillModel;
@@ -123,11 +129,11 @@ public class MainActivity extends AppCompatActivity
                 if (fieldIsEmpty(addStartTime)) return;
                 if (fieldIsEmpty(addEndTime)) return;
 
-                String customerName = addCustomerName.getText().toString();
-                String caller = addCaller.getText().toString();
-                String callee = addCaller.getText().toString();
-                String startTime = addStartTime.getText().toString();
-                String endTime = addEndTime.getText().toString();
+                String customerName = Objects.requireNonNull(addCustomerName.getText()).toString();
+                String caller = Objects.requireNonNull(addCaller.getText()).toString();
+                String callee = Objects.requireNonNull(addCallee.getText()).toString();
+                String startTime = Objects.requireNonNull(addStartTime.getText()).toString();
+                String endTime = Objects.requireNonNull(addEndTime.getText()).toString();
 
                 PhoneCall phoneCall = null;
                 try
@@ -147,8 +153,6 @@ public class MainActivity extends AppCompatActivity
 
   public void getPhoneBillClicked(View cView)
   {
-    final PhoneBill phoneBill = null;
-
     final View getLayout = LayoutInflater.from
             (MainActivity.this).inflate(R.layout.activity_get_phone_bill,
             null);
@@ -179,10 +183,12 @@ public class MainActivity extends AppCompatActivity
                         (R.id.get_customer_name);
                 if (fieldIsEmpty(getCustomerName)) return;
 
+                PhoneBill phoneBill;
                 try
                 {
-                  PhoneBill phoneBill1 = phoneBillModel.getPhoneBill(getCustomerName.getText().toString());
-                } catch (NullPointerException e) {
+                  phoneBill = phoneBillModel.getPhoneBill(Objects.requireNonNull(getCustomerName.getText()).toString());
+                } catch (NoSuchElementException e)
+                {
                   displayToastMessage(e.getMessage());
                   return;
                 }
@@ -195,9 +201,86 @@ public class MainActivity extends AppCompatActivity
             }).show();
   }
 
+  public void searchButtonClicked(View cView)
+  {
+    final View getLayout = LayoutInflater.from
+            (MainActivity.this).inflate(R.layout.activity_search_phone_bill,
+            null);
+
+    new MaterialStyledDialog.Builder(MainActivity.this)
+            .setIcon(R.drawable.ic_phonebill_foreground)
+            .setTitle("Search Phone Bill")
+            .setDescription("Please fill all fields")
+            .setCustomView(getLayout)
+            .setNegativeText("CANCEL")
+            .onNegative(new MaterialDialog.SingleButtonCallback()
+            {
+              @Override
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
+              {
+                dialog.dismiss();
+              }
+            })
+            .setPositiveText("SEARCH")
+            .onPositive(new MaterialDialog.SingleButtonCallback()
+            {
+              @Override
+              public void onClick(@NonNull MaterialDialog dialog,
+                                  @NonNull DialogAction which)
+              {
+                MaterialEditText searchCustomerName = getLayout.findViewById
+                        (R.id.search_customer_name);
+                MaterialEditText searchStartTime = getLayout.findViewById
+                        (R.id.search_start_time);
+                MaterialEditText searchEndTime = getLayout.findViewById
+                        (R.id.search_end_time);
+                if (fieldIsEmpty(searchCustomerName)) return;
+                if (fieldIsEmpty(searchStartTime)) return;
+                if (fieldIsEmpty(searchEndTime)) return;
+
+                String customerName = Objects.requireNonNull(searchCustomerName.getText()).toString();
+                String startTimeString = Objects.requireNonNull(searchStartTime.getText()).toString();
+                String endTimeString = Objects.requireNonNull(searchEndTime.getText()).toString();
+
+                String pattern = "MM/dd/yyyy hh:mm aa";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                simpleDateFormat.setLenient(false);
+                Date startTime;
+                Date endTime;
+
+                try
+                {
+                  checkDateTimeFormat(startTimeString, "Invalid Start Time Format");
+                  checkDateTimeFormat(endTimeString, "Invalid End Time Format");
+                  startTime = simpleDateFormat.parse(startTimeString);
+                  endTime = simpleDateFormat.parse(endTimeString);
+                } catch (ParseException | IllegalArgumentException e)
+                {
+                  displayToastMessage(e.getMessage());
+                  return;
+                }
+
+                PhoneBill phoneBill;
+                try
+                {
+                  phoneBill = phoneBillModel.searchPhoneBill(customerName, startTime, endTime);
+                } catch (NoSuchElementException e)
+                {
+                  displayToastMessage(e.getMessage());
+                  return;
+                }
+
+                Intent intent = new Intent(MainActivity.this, PrintResults.class);
+                intent.putExtra("PhoneBill", phoneBill);
+                startActivity(intent);
+              }
+            }).show();
+  }
+
   private boolean fieldIsEmpty(MaterialEditText cEditText)
   {
-    if (TextUtils.isEmpty(cEditText.getText().toString()))
+    if (TextUtils.isEmpty(Objects.requireNonNull(cEditText.getText()).toString()))
     {
       displayToastMessage(cEditText.getHint() + " cannot be empty");
       return true;
@@ -212,9 +295,12 @@ public class MainActivity extends AppCompatActivity
             Toast.LENGTH_LONG).show();
   }
 
-//  String pattern = "MM/dd/yyyy hh:mm aa";
-//  SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//    simpleDateFormat.setLenient(false);
-//  Date startTime = simpleDateFormat.parse(startTimeString);
-//  Date endTime = simpleDateFormat.parse(endTimeString);
+  private void checkDateTimeFormat(String dateTime, String errorMessage)
+  {
+    String dateTimeRegex = "^\\d{1,2}/\\d{1,2}/\\d{4} \\d{1,2}:\\d{2} (AM|PM|am|pm|aM|Am|pM|Pm)$";
+    if (dateTime == null || !dateTime.matches(dateTimeRegex))
+    {
+      throw new IllegalArgumentException(errorMessage);
+    }
+  }
 }

@@ -1,28 +1,33 @@
 package edu.pdx.cs410j.miyasato.phonebill;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import androidx.lifecycle.ViewModel;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
-public class PhoneBillModel
+class PhoneBillModel extends ViewModel
 {
   private final Map<String, PhoneBill> phoneBills = new HashMap<>();
 
-  public PhoneBill getPhoneBill(String customerName) throws NullPointerException{
-    PhoneBill phoneBill = phoneBills.get(customerName);
-    if (phoneBill == null) {
-      throw new NullPointerException(customerName + " has no phone bills!");
+  PhoneBill getPhoneBill(String customerName) throws NoSuchElementException
+  {
+    if (!phoneBills.containsKey(customerName))
+    {
+      throw new NoSuchElementException(customerName + " has no phone bills!");
     }
 
-    return phoneBill;
+    return phoneBills.get(customerName);
   }
 
-  public void addPhoneCallToPhoneBill(String customerName, PhoneCall phoneCall) {
+  void addPhoneCallToPhoneBill(String customerName, PhoneCall phoneCall)
+  {
     PhoneBill phoneBill = phoneBills.get(customerName);
 
-    if(phoneBill == null) {
+    if (phoneBill == null)
+    {
       phoneBill = new PhoneBill((customerName));
     }
 
@@ -30,12 +35,20 @@ public class PhoneBillModel
     phoneBills.put(customerName, phoneBill);
   }
 
-  public PhoneBill searchPhoneBill(PhoneBill phoneBill, Date startTime, Date endTime)
+  PhoneBill searchPhoneBill(String customerName, Date startTime, Date endTime) throws NoSuchElementException
   {
-    PhoneBill filteredPhoneBill = new PhoneBill(phoneBill.getCustomer());
+    if (!phoneBills.containsKey(customerName))
+    {
+      throw new NoSuchElementException(customerName + " has no phone bills!");
+    }
 
-    for (PhoneCall phoneCall : phoneBill.getPhoneCalls()) {
-      if (phoneCall.getStartTime().after(startTime) && phoneCall.getStartTime().before(endTime)) {
+    PhoneBill phoneBill = phoneBills.get(customerName);
+    PhoneBill filteredPhoneBill = new PhoneBill(customerName);
+
+    for (PhoneCall phoneCall : Objects.requireNonNull(phoneBill).getPhoneCalls())
+    {
+      if (phoneCall.getStartTime().after(startTime) && phoneCall.getStartTime().before(endTime))
+      {
         filteredPhoneBill.addPhoneCall(phoneCall);
       }
     }

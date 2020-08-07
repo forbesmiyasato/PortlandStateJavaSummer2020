@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/search_customer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/customer_name"
+        app:met_iconRight="@drawable/ic_phonebill_foreground"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/search_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/start_time"
+        app:met_iconRight="@drawable/ic_phonebill_foreground"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/search_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/end_time"
+        app:met_iconRight="@drawable/ic_phonebill_foreground"
+        />
+
+
+
+</LinearLayout>
