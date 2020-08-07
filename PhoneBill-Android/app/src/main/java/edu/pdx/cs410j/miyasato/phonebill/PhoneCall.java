@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class represents a PhoneCall, and extends AbstractPhoneCall
@@ -154,6 +155,5 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
       return this.getCaller().compareTo(otherPhoneCall.getCaller());
     }
   }
-
 
 }
