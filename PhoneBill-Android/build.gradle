@@ -22,6 +22,9 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/davidwhitlock/maven'
         }
+        maven {
+            url "https://jitpack.io"
+        }
     }
 }
 
