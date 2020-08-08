@@ -15,12 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,12 +47,18 @@ public class MainActivity extends AppCompatActivity
       @Override
       public void onClick(View view)
       {
-        Snackbar.make(view, "This is a README!", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, "Go to Menu -> README for usage help!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
       }
     });
 
-    phoneBillModel = new PhoneBillModel();
+    try
+    {
+      phoneBillModel = new PhoneBillModel(getApplicationContext());
+    } catch (IOException | ClassNotFoundException e) {
+      Log.e("Error", e.getMessage());
+      displayToastMessage(e.getMessage());
+    }
   }
 
   @Override
@@ -145,7 +153,12 @@ public class MainActivity extends AppCompatActivity
                   return;
                 }
 
-                phoneBillModel.addPhoneCallToPhoneBill(customerName, phoneCall);
+                try
+                {
+                  phoneBillModel.addPhoneCallToPhoneBill(customerName, phoneCall);
+                } catch (IOException e) {
+                  displayToastMessage(e.getMessage());
+                }
                 displayToastMessage(customerName + " added " + phoneCall.toString());
               }
             }).show();

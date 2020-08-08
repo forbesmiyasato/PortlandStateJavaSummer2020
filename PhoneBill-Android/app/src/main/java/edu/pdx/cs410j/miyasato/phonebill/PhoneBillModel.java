@@ -1,16 +1,43 @@
 package edu.pdx.cs410j.miyasato.phonebill;
 
-import androidx.lifecycle.ViewModel;
+import android.content.Context;
+import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-class PhoneBillModel extends ViewModel
+class PhoneBillModel extends AppCompatActivity
 {
-  private final Map<String, PhoneBill> phoneBills = new HashMap<>();
+  private Map<String, PhoneBill> phoneBills;
+  private File file;
+  private Context context;
+
+  PhoneBillModel(Context context) throws IOException, ClassNotFoundException
+  {
+    this.context = context;
+    File dir = context.getFilesDir();
+    file = new File(dir, "phonebill.txt");
+    if (!file.exists())
+    {
+      if (!file.createNewFile())
+      {
+        throw new IOException("Unable to create PhoneBill file");
+      }
+    }
+    loadPhoneBills();
+  }
 
   PhoneBill getPhoneBill(String customerName) throws NoSuchElementException
   {
@@ -22,7 +49,7 @@ class PhoneBillModel extends ViewModel
     return phoneBills.get(customerName);
   }
 
-  void addPhoneCallToPhoneBill(String customerName, PhoneCall phoneCall)
+  void addPhoneCallToPhoneBill(String customerName, PhoneCall phoneCall) throws IOException
   {
     PhoneBill phoneBill = phoneBills.get(customerName);
 
@@ -33,6 +60,7 @@ class PhoneBillModel extends ViewModel
 
     phoneBill.addPhoneCall(phoneCall);
     phoneBills.put(customerName, phoneBill);
+    savePhoneBills();
   }
 
   PhoneBill searchPhoneBill(String customerName, Date startTime, Date endTime) throws NoSuchElementException
@@ -54,5 +82,29 @@ class PhoneBillModel extends ViewModel
     }
 
     return filteredPhoneBill;
+  }
+
+  private void savePhoneBills() throws IOException
+  {
+    FileOutputStream fileOutputStream = context.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+    objectOutputStream.writeObject(this.phoneBills);
+    objectOutputStream.close();
+  }
+
+  @SuppressWarnings(value = "unchecked")
+  private void loadPhoneBills() throws IOException, ClassNotFoundException
+  {
+    FileInputStream fileInputStream = context.openFileInput(file.getName());
+    try
+    {
+      ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+      this.phoneBills = (Map<String, PhoneBill>) objectInputStream.readObject();
+      objectInputStream.close();
+      fileInputStream.close();
+    } catch (EOFException e)
+    {
+      phoneBills = new HashMap<>();
+    }
   }
 }
