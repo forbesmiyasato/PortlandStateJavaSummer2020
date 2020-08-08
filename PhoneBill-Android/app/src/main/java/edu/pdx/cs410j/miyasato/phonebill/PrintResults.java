@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,16 +30,21 @@ public class PrintResults extends AppCompatActivity
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_results);
-    ConstraintLayout resultLayout = (ConstraintLayout) findViewById(R.id.resultsLayout);
+    LinearLayout resultLayout = (LinearLayout) findViewById(R.id.resultsLayout);
+    LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT);
+
     ListView results = findViewById(R.id.results);
 
-    TextView customerName = new TextView(this);
+    TextView customerName = findViewById(R.id.result_customer_name);
     TypedValue appearanceID = new TypedValue();
     Resources.Theme theme = getTheme();
     if (theme.resolveAttribute(R.attr.textAppearanceListItem, appearanceID, true))
     {
       customerName.setTextAppearance(appearanceID.data);
     }
+
     PhoneBill phoneBill;
     Intent intent = getIntent();
     phoneBill = (PhoneBill) intent.getSerializableExtra("PhoneBill");
@@ -46,15 +52,18 @@ public class PrintResults extends AppCompatActivity
     Resources res = getResources();
     customerName.setText(res.getString(R.string.result_customer_name, Objects.requireNonNull(phoneBill).getCustomer()));
 
-    resultLayout.addView(customerName);
-    if (Objects.requireNonNull(phoneBill).getPhoneCalls().size() == 0)
+    if (Objects.requireNonNull(phoneBill).getPhoneCalls().isEmpty())
     {
       TextView noPhoneBill = new TextView(this);
+      noPhoneBill.setTextAppearance(appearanceID.data);
       noPhoneBill.setText(res.getString(R.string.no_phone_bills));
+      resultLayout.addView(noPhoneBill, p);
     }
-
-    List<PhoneCall> phoneCalls = new ArrayList<>(phoneBill.getPhoneCalls());
-    results.setAdapter(new ResultsAdapter(this, android.R.layout.simple_list_item_1, phoneCalls));
+    else
+    {
+      List<PhoneCall> phoneCalls = new ArrayList<>(phoneBill.getPhoneCalls());
+      results.setAdapter(new ResultsAdapter(this, android.R.layout.simple_list_item_1, phoneCalls));
+    }
   }
 
   private class ResultsAdapter extends ArrayAdapter<PhoneCall>
