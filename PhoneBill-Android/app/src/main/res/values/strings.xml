@@ -9,7 +9,6 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="readme">This is a README!</string>
     <string name="title_activity_readme">Readme</string>
 
     <!-- Preference Titles -->
@@ -39,4 +38,20 @@
     <string name="result_customer_name">Customer Name: %s</string>
     <string name="no_phone_bills">No Phone Bills Found</string>
     <string name="duration">%s for %d minutes</string>
+    <string name="readme">
+        Usage:\n\n
+        CS410J Project 5: A Small Device Application for a Phone Bill\n
+        Forbes Miyasato\n\n
+
+        This Phone Bill application supports creating phone bills, adding phone calls,
+        printing a phone bill and its calls, and search for calls.\n\n
+
+        Format for fields:\n\n
+        Start Time&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+        &#160;&#160;MM/dd/yyyy hh:mm am/pm\n
+        End Time&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+        &#160;&#160;&#160;MM/dd/yyyy hh:mm am/pm\n
+        Caller Number&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;nnn-nnn-nnnn\n
+        Callee Number&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;nnn-nnn-nnnn\n
+    </string>
 </resources>
