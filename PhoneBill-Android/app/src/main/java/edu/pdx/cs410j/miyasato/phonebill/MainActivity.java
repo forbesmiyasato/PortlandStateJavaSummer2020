@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity
     try
     {
       phoneBillModel = new PhoneBillModel(getApplicationContext());
-    } catch (IOException | ClassNotFoundException e) {
+    } catch (IOException | ClassNotFoundException e)
+    {
       Log.e("Error", e.getMessage());
       displayToastMessage(e.getMessage());
     }
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity
     new MaterialStyledDialog.Builder(MainActivity.this)
             .setIcon(R.drawable.ic_phonebill_foreground)
             .setTitle("Add a Phone Bill")
+            .autoDismiss(false)
             .setDescription("Please fill all fields")
             .setCustomView(addLayout)
             .setNegativeText("CANCEL")
@@ -156,10 +158,12 @@ public class MainActivity extends AppCompatActivity
                 try
                 {
                   phoneBillModel.addPhoneCallToPhoneBill(customerName, phoneCall);
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                   displayToastMessage(e.getMessage());
                 }
                 displayToastMessage(customerName + " added " + phoneCall.toString());
+                dialog.dismiss();
               }
             }).show();
   }
@@ -173,9 +177,11 @@ public class MainActivity extends AppCompatActivity
     new MaterialStyledDialog.Builder(MainActivity.this)
             .setIcon(R.drawable.ic_phonebill_foreground)
             .setTitle("Get Phone Bill")
+            .autoDismiss(false)
             .setDescription("Please provide the customer name")
             .setCustomView(getLayout)
             .setNegativeText("CANCEL")
+            .setCancelable(false)
             .onNegative(new MaterialDialog.SingleButtonCallback()
             {
               @Override
@@ -192,11 +198,12 @@ public class MainActivity extends AppCompatActivity
               public void onClick(@NonNull MaterialDialog dialog,
                                   @NonNull DialogAction which)
               {
+
                 MaterialEditText getCustomerName = getLayout.findViewById
                         (R.id.get_customer_name);
                 if (fieldIsEmpty(getCustomerName)) return;
 
-                PhoneBill phoneBill;
+                PhoneBill phoneBill = null;
                 try
                 {
                   phoneBill = phoneBillModel.getPhoneBill(Objects.requireNonNull(getCustomerName.getText()).toString());
@@ -206,10 +213,11 @@ public class MainActivity extends AppCompatActivity
                   return;
                 }
 
-                Intent intent = new Intent(MainActivity.this, PrintResults.class);
-                intent.putExtra("customer", getCustomerName.getText().toString());
-                intent.putExtra("PhoneBill", phoneBill);
-                startActivity(intent);
+                  dialog.dismiss();
+                  Intent intent = new Intent(MainActivity.this, PrintResults.class);
+                  intent.putExtra("customer", getCustomerName.getText().toString());
+                  intent.putExtra("PhoneBill", phoneBill);
+                  startActivity(intent);
               }
             }).show();
   }
@@ -223,6 +231,7 @@ public class MainActivity extends AppCompatActivity
     new MaterialStyledDialog.Builder(MainActivity.this)
             .setIcon(R.drawable.ic_phonebill_foreground)
             .setTitle("Search Phone Bill")
+            .autoDismiss(false)
             .setDescription("Please fill all fields")
             .setCustomView(getLayout)
             .setNegativeText("CANCEL")
@@ -287,6 +296,7 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(MainActivity.this, PrintResults.class);
                 intent.putExtra("PhoneBill", phoneBill);
                 startActivity(intent);
+                dialog.dismiss();
               }
             }).show();
   }
@@ -305,7 +315,7 @@ public class MainActivity extends AppCompatActivity
   {
     Toast.makeText(MainActivity.this,
             errorMessage,
-            Toast.LENGTH_LONG).show();
+            Toast.LENGTH_SHORT).show();
   }
 
   private void checkDateTimeFormat(String dateTime, String errorMessage)
