@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity
               }
             })
             .setPositiveText("ADD")
+            .setCancelable(false)
             .onPositive(new MaterialDialog.SingleButtonCallback()
             {
               @Override
@@ -245,6 +246,7 @@ public class MainActivity extends AppCompatActivity
               }
             })
             .setPositiveText("SEARCH")
+            .setCancelable(false)
             .onPositive(new MaterialDialog.SingleButtonCallback()
             {
               @Override
@@ -277,6 +279,9 @@ public class MainActivity extends AppCompatActivity
                   checkDateTimeFormat(endTimeString, "Invalid End Time Format");
                   startTime = simpleDateFormat.parse(startTimeString);
                   endTime = simpleDateFormat.parse(endTimeString);
+                  if (startTime.after(endTime)) {
+                    throw new IllegalArgumentException("Invalid Times! Start time is after end time!");
+                  }
                 } catch (ParseException | IllegalArgumentException e)
                 {
                   displayToastMessage(e.getMessage());

@@ -33,45 +33,92 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="411dp"
+            android:layout_height="242dp"
+            android:layout_marginTop="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/phone_bill_image"
+            android:contentDescription="@string/phone_bill_image" />
+
         <Button
             android:id="@+id/print_phone_bill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="238dp"
+            android:layout_height="64dp"
             android:layout_marginStart="162dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="161dp"
             android:onClick="getPhoneBillClicked"
             android:text="@string/print_phone_bill"
             app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/button2"
             app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/add_button" />
 
         <Button
             android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="238dp"
+            android:layout_height="64dp"
             android:layout_marginStart="161dp"
-            android:layout_marginTop="230dp"
+            android:layout_marginTop="328dp"
             android:layout_marginEnd="162dp"
             android:onClick="addPhoneBillClicked"
             android:text="@string/add_phonebill"
+            android:background="@color/button1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="238dp"
+            android:layout_height="64dp"
             android:layout_marginStart="154dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="169dp"
             android:onClick="searchButtonClicked"
             android:text="@string/search_phone_bill"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.291"
+            app:layout_constraintHorizontal_bias="0.446"
             app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/print_phone_bill" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="96dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="148dp"
+            android:layout_marginEnd="50dp"
+            android:text="@string/phone"
+            android:textColor="@color/white"
+            android:textSize="33sp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.439"
+            app:layout_constraintStart_toStartOf="@id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="120dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="148dp"
+            android:text="@string/bill"
+            android:textColor="@color/white"
+            android:textSize="33sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.608"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

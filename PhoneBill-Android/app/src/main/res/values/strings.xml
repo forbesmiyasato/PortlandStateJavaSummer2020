@@ -37,7 +37,8 @@
     <string name="search_phone_bill">Search Phone Bill</string>
     <string name="result_customer_name">Customer Name: %s</string>
     <string name="no_phone_bills">No Phone Bills Found</string>
-    <string name="duration">%s for %d minutes</string>
+    <string name="duration">%s total length %d minutes</string>
+    <string name="durationSingular">%s total length %d minute</string>
     <string name="readme">
         Usage:\n\n
         CS410J Project 5: A Small Device Application for a Phone Bill\n
@@ -53,5 +54,13 @@
         &#160;&#160;&#160;MM/dd/yyyy hh:mm am/pm\n
         Caller Number&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;nnn-nnn-nnnn\n
         Callee Number&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;nnn-nnn-nnnn\n
+        \n\n\n
+        Credits:\n
+        DINARDI, G. “Phone Bill Featured Image”. How to Stop Overpaying Your Business Phone Bill,
+        5 Nov. 2019,
+        https://storage.googleapis.com/nextivawebsites-wordpressfiles-voip/var/www/virtual/nextiva.com/voip/2019/10/phone-bill-featured-image.png.
     </string>
+    <string name="phone">Phone</string>
+    <string name="bill">Bill App</string>
+    <string name="phone_bill_image">Phone Bill Image</string>
 </resources>

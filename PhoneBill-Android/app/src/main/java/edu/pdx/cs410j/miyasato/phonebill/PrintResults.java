@@ -58,8 +58,7 @@ public class PrintResults extends AppCompatActivity
       noPhoneBill.setTextAppearance(appearanceID.data);
       noPhoneBill.setText(res.getString(R.string.no_phone_bills));
       resultLayout.addView(noPhoneBill, p);
-    }
-    else
+    } else
     {
       List<PhoneCall> phoneCalls = new ArrayList<>(phoneBill.getPhoneCalls());
       results.setAdapter(new ResultsAdapter(this, android.R.layout.simple_list_item_1, phoneCalls));
@@ -111,7 +110,10 @@ public class PrintResults extends AppCompatActivity
       int duration = (int) TimeUnit.MILLISECONDS.toMinutes(Objects.requireNonNull(currentPC)
               .getEndTime().getTime() - currentPC.getStartTime().getTime());
 
-      view.setText(getResources().getString(R.string.duration, currentPC.toString(), duration));
+      String string = duration == 1 ?
+              getResources().getString(R.string.durationSingular, currentPC.toString(), duration) :
+              getResources().getString(R.string.duration, currentPC.toString(), duration);
+      view.setText(string);
 
       return view;
     }
